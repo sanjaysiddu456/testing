@@ -133,7 +133,6 @@
                     android:textColor="#222222"
                     android:textSize="12sp" />
 
-
                 <TextView
                     android:id="@+id/tvCallBackDateTime"
                     android:layout_width="wrap_content"

@@ -1,0 +1,46 @@
+{
+  "status": true,
+  "message": "Enquiries fetched successfully",
+  "data": [
+    {
+      "id": 1,
+      "customerName": "Rajesh Kumar",
+      "mobileNumber": "9876543210",
+      "isCertified": true,
+      "carName": "Kia Seltos",
+      "callBackIn": "Today",
+      "callBackDate": "17-11-2026",
+      "callBackTime": "04:30 PM"
+    },
+    {
+      "id": 2,
+      "customerName": "Anuradha",
+      "mobileNumber": "9876543211",
+      "isCertified": false,
+      "carName": "Kia Sonet",
+      "callBackIn": "Tomorrow",
+      "callBackDate": "18-11-2026",
+      "callBackTime": "11:00 AM"
+    },
+    {
+      "id": 3,
+      "customerName": "Anuj Kumar",
+      "mobileNumber": "9876543212",
+      "isCertified": true,
+      "carName": "Kia Carens",
+      "callBackIn": "Today",
+      "callBackDate": "17-11-2026",
+      "callBackTime": "06:00 PM"
+    },
+    {
+      "id": 4,
+      "customerName": "Basavaraj",
+      "mobileNumber": "9876543213",
+      "isCertified": false,
+      "carName": "Kia Sonet",
+      "callBackIn": "Yesterday",
+      "callBackDate": "16-11-2026",
+      "callBackTime": "02:00 PM"
+    }
+  ]
+}

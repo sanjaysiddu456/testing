@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="#F7F3F2"
+    android:paddingHorizontal="10dp"
+    android:gravity="center_vertical"
+    android:paddingVertical="2dp">
+
+    <TextView
+        android:id="@+id/tvDetailLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Reg. Name"
+        android:textColor="#222222"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/tvDetailValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rajesh"
+        android:textColor="#222222"
+        android:textSize="10sp"
+        android:textStyle="bold" />
+
+</LinearLayout>

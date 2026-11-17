@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.testapplication.databinding.ItemEnquiryBinding
 import com.example.testapplication.datamodels.Enquiry
 
 
@@ -23,7 +24,7 @@ class EnquiryAdapter(
             binding.tvMobileNumber.text = enquiry.mobileNumber
             binding.tvCarName.text = enquiry.carName
             binding.tvCallBackIn.text = enquiry.callBackIn
-            binding.tvCallBackDate.text =
+            binding.tvCallBackDateTime.text =
                 "${enquiry.callBackDate} | ${enquiry.callBackTime}"
 
             binding.tvCertified.text =

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    android:paddingHorizontal="10dp"
+    android:paddingVertical="10dp">
+
+    <!-- Created Date and Time -->
+
+    <TextView
+        android:id="@+id/tvCreatedDateTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="21 Aug, 10:30 AM"
+        android:textColor="#222222"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <!-- Follow-up Details -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <!-- Left Side -->
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvFollowUpType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Call Back"
+                android:textColor="#222222"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvRemarks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="Customer Said call back"
+                android:textColor="#888888"
+                android:textSize="10sp" />
+
+        </LinearLayout>
+
+        <!-- Right Side -->
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvNextFollowUpType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Follow-up"
+                android:textColor="#222222"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvNextFollowUpDateTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:gravity="end"
+                android:text="Call back, 23rd Aug\n02:00 PM"
+                android:textColor="#28A9D2"
+                android:textSize="10sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

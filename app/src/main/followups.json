@@ -1,0 +1,28 @@
+{
+  "status": true,
+  "message": "Follow-ups fetched successfully",
+  "data": [
+    {
+      "id": 1,
+      "enquiryId": 1,
+      "createdDate": "21 Aug",
+      "createdTime": "10:30 AM",
+      "followUpType": "Call Back",
+      "remarks": "Customer Said call back",
+      "nextFollowUpType": "New Follow-up",
+      "nextFollowUpDate": "23rd Aug",
+      "nextFollowUpTime": "02:00 PM"
+    },
+    {
+      "id": 2,
+      "enquiryId": 1,
+      "createdDate": "20 Aug",
+      "createdTime": "10:30 AM",
+      "followUpType": "Call Back",
+      "remarks": "Customer Said call back tomorrow",
+      "nextFollowUpType": "New Follow-up",
+      "nextFollowUpDate": "21st Aug",
+      "nextFollowUpTime": "12:15 PM"
+    }
+  ]
+}

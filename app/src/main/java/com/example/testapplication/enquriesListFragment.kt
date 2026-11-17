@@ -1,5 +1,6 @@
 package com.example.testapplication
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -65,8 +66,17 @@ class enquriesListFragment : Fragment() {
 
         enquiryAdapter = EnquiryAdapter { enquiry ->
 
-            // Handle enquiry item click here.
-            // Example: navigate to enquiry details.
+            val intent = Intent(
+                requireContext(),
+                SellingEnquiryDetailsActivity::class.java
+            )
+
+            intent.putExtra(
+                SellingEnquiryDetailsActivity.EXTRA_ENQUIRY,
+                enquiry
+            )
+
+            startActivity(intent)
         }
 
         binding.rvEnquiries.apply {

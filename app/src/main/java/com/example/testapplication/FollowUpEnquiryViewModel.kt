@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.testapplication.datamodels.CreateFollowUpResponse
+import com.example.testapplication.datamodels.NewFollowUpRequest
 import com.example.testapplication.datamodels.responseGetEnquiries
 import com.example.testapplication.datamodels.responseGetFollowUps
 import com.example.testapplication.enquiryFeature.EnquiryViewModel
@@ -66,6 +68,64 @@ class FollowUpEnquiryViewModel(
             }
         }
     }
+
+
+    private val _createFollowUpResponse =
+        MutableLiveData<ApiStatus.Resource<CreateFollowUpResponse>>()
+
+    val createFollowUpResponse: LiveData<ApiStatus.Resource<CreateFollowUpResponse>>
+        get() = _createFollowUpResponse
+
+    fun createFollowUp(request: NewFollowUpRequest) {
+
+        viewModelScope.launch {
+
+            try {
+
+                _createFollowUpResponse.value =
+                    ApiStatus.Resource.loading()
+
+                val response = repository.createFollowUp(request)
+
+                if (response.isSuccessful) {
+
+                    val body = response.body()
+
+                    if (body != null && body.status) {
+
+                        _createFollowUpResponse.value =
+                            ApiStatus.Resource.success(body)
+
+                    } else {
+
+                        _createFollowUpResponse.value =
+                            ApiStatus.Resource.error(
+                                body?.message ?: "Unable to create follow-up"
+                            )
+                    }
+
+                } else {
+
+                    _createFollowUpResponse.value =
+                        ApiStatus.Resource.error(
+                            response.errorBody()?.string()
+                                ?: "Unable to create follow-up"
+                        )
+                }
+
+            } catch (e: Exception) {
+
+                _createFollowUpResponse.value =
+                    ApiStatus.Resource.error(
+                        e.message ?: "Something went wrong"
+                    )
+
+                e.printStackTrace()
+            }
+        }
+    }
+
+
 }
 
 class FollowUpEnquiryViewModelFactory(

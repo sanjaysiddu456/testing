@@ -21,5 +21,11 @@ data class Enquiry(
     val carName: String = "",
     val callBackIn: String = "",
     val callBackDate: String = "",
-    val callBackTime: String = ""
+    val callBackTime: String = "",
+    val isClosed: Boolean = false,
+    val closedDateTime: String = "",
+    val enquiryNo: String = "",
+    val dateOfEnquiry: String = "",
+    val timeOfEnquiry: String = "",
+    val enquirySource: String = ""
 ) : Serializable

@@ -1,0 +1,70 @@
+{
+  "status": true,
+  "message": "Stocks fetched successfully",
+  "data": [
+    {
+      "id": 1,
+      "carName": "Creta",
+      "stockNumber": "MH-41 50987",
+      "availability": "Bought",
+      "photosUploaded": true,
+      "photoCount": 4,
+      "images": [
+        "creta_front",
+        "creta_side",
+        "creta_rear",
+        "creta_interior"
+      ],
+      "stockDate": "20 Aug, 2026",
+      "enquiries": [
+        {
+          "id": 1,
+          "customerName": "Rajesh",
+          "mobileNumber": "9087654321",
+          "isCertified": true,
+          "lastEnquiredOn": "20th Aug 2026"
+        },
+        {
+          "id": 2,
+          "customerName": "Anuradha",
+          "mobileNumber": "9087654321",
+          "isCertified": true,
+          "lastEnquiredOn": "19th Aug 2026"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "carName": "i20",
+      "stockNumber": "MH-41 50987",
+      "availability": "In Stock",
+      "photosUploaded": true,
+      "photoCount": 2,
+      "images": [
+        "i20_front",
+        "i20_side"
+      ],
+      "stockDate": "20 Aug, 2026",
+      "enquiries": [
+        {
+          "id": 3,
+          "customerName": "Anuradha",
+          "mobileNumber": "9087654321",
+          "isCertified": true,
+          "lastEnquiredOn": "19th Aug 2026"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "carName": "Grand i10",
+      "stockNumber": "MH-41 50987",
+      "availability": "In Stock",
+      "photosUploaded": false,
+      "photoCount": 0,
+      "images": [],
+      "stockDate": "20 Aug, 2026",
+      "enquiries": []
+    }
+  ]
+}

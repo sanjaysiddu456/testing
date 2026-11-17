@@ -5,17 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F5F3F3"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:clipToPadding="false">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingHorizontal="10dp"
-        android:paddingTop="12dp"
+        android:paddingTop="10dp"
         android:paddingBottom="20dp">
 
-        <!-- Customer Details Card -->
+        <!-- ===================================== -->
+        <!-- CUSTOMER DETAILS CARD                 -->
+        <!-- ===================================== -->
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -29,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!-- Name and Certification -->
+                <!-- Customer Name and Certified -->
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -55,7 +58,7 @@
                         android:layout_alignParentEnd="true"
                         android:text="Certified"
                         android:textColor="#75B900"
-                        android:textSize="11sp"
+                        android:textSize="10sp"
                         android:textStyle="bold" />
 
                 </RelativeLayout>
@@ -65,8 +68,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:gravity="center_vertical"
+                    android:orientation="horizontal"
                     android:paddingHorizontal="10dp"
                     android:paddingTop="8dp"
                     android:paddingBottom="10dp">
@@ -90,60 +93,17 @@
 
                 </LinearLayout>
 
-                <!-- Vehicle Information -->
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingHorizontal="10dp"
-                    android:paddingVertical="6dp">
-
-                    <!-- Registration Name -->
-
-                    <include
-                        layout="@layout/item_enquiry_detail_row"
-                        android:id="@+id/rowRegName" />
-
-                    <!-- Registration Number -->
-
-                    <include
-                        layout="@layout/item_enquiry_detail_row"
-                        android:id="@+id/rowRegNo" />
-
-                    <!-- Maker -->
-
-                    <include
-                        layout="@layout/item_enquiry_detail_row"
-                        android:id="@+id/rowMaker" />
-
-                    <!-- Model -->
-
-                    <include
-                        layout="@layout/item_enquiry_detail_row"
-                        android:id="@+id/rowModel" />
-
-                    <!-- Car -->
-
-                    <include
-                        layout="@layout/item_enquiry_detail_row"
-                        android:id="@+id/rowCar" />
-
-                </LinearLayout>
-
                 <!-- Callback Information -->
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="8dp"
+                    android:background="#F5F2F2"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:background="#F5F2F2"
-                    android:paddingHorizontal="10dp"
-                    android:paddingVertical="8dp"
-                    android:layout_marginHorizontal="8dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="8dp">
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="8dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -171,6 +131,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="5dp"
                         android:text="•"
+                        android:textColor="#222222"
                         android:textSize="12sp" />
 
                     <TextView
@@ -184,14 +145,15 @@
 
                 </LinearLayout>
 
-
-
+                <!-- Call Customer / Close Enquiry -->
 
                 <LinearLayout
+                    android:id="@+id/layoutEnquiryActions"
                     android:layout_width="match_parent"
                     android:layout_height="44dp"
-                    android:orientation="horizontal"
-                    android:background="@drawable/bg_enquiry_actions">
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/bg_enquiry_actions"
+                    android:orientation="horizontal">
 
                     <!-- Call Customer -->
 
@@ -200,18 +162,18 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="horizontal"
+                        android:background="?attr/selectableItemBackground"
                         android:clickable="true"
                         android:focusable="true"
-                        android:background="?attr/selectableItemBackground">
+                        android:gravity="center"
+                        android:orientation="horizontal">
 
                         <ImageView
                             android:layout_width="14dp"
                             android:layout_height="14dp"
-                            android:src="@android:drawable/ic_menu_call"
                             android:contentDescription="Call customer"
-                            android:tint="#333333" />
+                            android:src="@android:drawable/ic_menu_call"
+                            app:tint="#333333" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -223,8 +185,6 @@
                             android:fontFamily="sans-serif-medium" />
 
                     </LinearLayout>
-
-                    <!-- Vertical Divider -->
 
                     <View
                         android:layout_width="1dp"
@@ -238,18 +198,18 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="horizontal"
+                        android:background="?attr/selectableItemBackground"
                         android:clickable="true"
                         android:focusable="true"
-                        android:background="?attr/selectableItemBackground">
+                        android:gravity="center"
+                        android:orientation="horizontal">
 
                         <ImageView
                             android:layout_width="14dp"
                             android:layout_height="14dp"
-                            android:src="@android:drawable/ic_menu_close_clear_cancel"
                             android:contentDescription="Close enquiry"
-                            android:tint="#333333" />
+                            android:src="@android:drawable/ic_menu_close_clear_cancel"
+                            app:tint="#333333" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -263,16 +223,122 @@
                     </LinearLayout>
 
                 </LinearLayout>
+
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 
+        <!-- ===================================== -->
+        <!-- ENQUIRY DETAILS                       -->
+        <!-- ===================================== -->
 
+        <TextView
+            android:id="@+id/tvEnquiryDetailsTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="8dp"
+            android:text="Enquiry Details"
+            android:textColor="#171717"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@android:color/white"
+            app:cardCornerRadius="2dp"
+            app:cardElevation="1dp">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
+                <!-- Closed Status Banner -->
 
-        <!-- Follow-up History Title -->
+                <TextView
+                    android:id="@+id/tvEnquiryClosedBanner"
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"
+                    android:background="#333333"
+                    android:gravity="center"
+                    android:text="Enquiry closed on 21 Aug, 10:30 AM"
+                    android:textColor="@android:color/white"
+                    android:textSize="10sp"
+                    android:visibility="gone" />
+
+                <!-- Enquiry Basic Information -->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="8dp">
+
+                    <include
+                        android:id="@+id/rowEnquiryNo"
+                        layout="@layout/item_enquiry_detail_row" />
+
+                    <include
+                        android:id="@+id/rowDateOfEnquiry"
+                        layout="@layout/item_enquiry_detail_row" />
+
+                    <include
+                        android:id="@+id/rowTimeOfEnquiry"
+                        layout="@layout/item_enquiry_detail_row" />
+
+                    <include
+                        android:id="@+id/rowEnquirySource"
+                        layout="@layout/item_enquiry_detail_row" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:background="#EEEEEE" />
+
+                <!-- Vehicle Information -->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="8dp">
+
+                    <include
+                        android:id="@+id/rowRegName"
+                        layout="@layout/item_enquiry_detail_row" />
+
+                    <include
+                        android:id="@+id/rowRegNo"
+                        layout="@layout/item_enquiry_detail_row" />
+
+                    <include
+                        android:id="@+id/rowMaker"
+                        layout="@layout/item_enquiry_detail_row" />
+
+                    <include
+                        android:id="@+id/rowModel"
+                        layout="@layout/item_enquiry_detail_row" />
+
+                    <include
+                        android:id="@+id/rowCar"
+                        layout="@layout/item_enquiry_detail_row" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- ===================================== -->
+        <!-- FOLLOW-UP HISTORY                     -->
+        <!-- ===================================== -->
 
         <TextView
             android:id="@+id/tvFollowUpHistoryTitle"
@@ -285,7 +351,7 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <!-- New Follow-up Link: Visible when follow-ups exist -->
+        <!-- New Follow-up Link -->
 
         <TextView
             android:id="@+id/tvNewFollowUp"
@@ -305,7 +371,7 @@
             android:clickable="true"
             android:focusable="true" />
 
-        <!-- Follow-up History Card -->
+        <!-- Follow-up Card -->
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -336,7 +402,7 @@
                     android:gravity="center"
                     android:orientation="vertical"
                     android:padding="14dp"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -347,21 +413,21 @@
                         <ImageView
                             android:layout_width="34dp"
                             android:layout_height="34dp"
+                            android:background="@drawable/bg_followup_circle"
+                            android:contentDescription="Call follow-up"
                             android:padding="8dp"
                             android:src="@android:drawable/ic_menu_call"
-                            android:background="@drawable/bg_followup_circle"
-                            android:tint="#333333"
-                            android:contentDescription="Call follow-up" />
+                            app:tint="#333333" />
 
                         <ImageView
                             android:layout_width="34dp"
                             android:layout_height="34dp"
                             android:layout_marginStart="5dp"
+                            android:background="@drawable/bg_followup_circle"
+                            android:contentDescription="Follow-up history"
                             android:padding="8dp"
                             android:src="@android:drawable/ic_menu_agenda"
-                            android:background="@drawable/bg_followup_circle"
-                            android:tint="#333333"
-                            android:contentDescription="Follow-up history" />
+                            app:tint="#333333" />
 
                     </LinearLayout>
 
@@ -437,7 +503,6 @@
             </FrameLayout>
 
         </androidx.cardview.widget.CardView>
-
 
     </LinearLayout>
 

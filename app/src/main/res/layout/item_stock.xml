@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginVertical="5dp"
+    app:cardBackgroundColor="@android:color/white"
+    app:cardCornerRadius="2dp"
+    app:cardElevation="2dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <!-- Vehicle Image -->
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="145dp">
+
+            <ImageView
+                android:id="@+id/ivStockImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#F5F3F3"
+                android:scaleType="centerCrop"
+                android:contentDescription="Stock vehicle image" />
+
+            <!-- Photo Count -->
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="22dp"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="5dp"
+                android:background="#DDFFFFFF"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingHorizontal="5dp">
+
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:src="@android:drawable/ic_menu_gallery"
+                    android:contentDescription="Photos" />
+
+                <TextView
+                    android:id="@+id/tvPhotoCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:text="04"
+                    android:textColor="#222222"
+                    android:textSize="9sp" />
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+        <!-- Vehicle Name -->
+
+        <TextView
+            android:id="@+id/tvStockCarName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Creta"
+            android:textColor="#171717"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <!-- Stock Number -->
+
+        <TextView
+            android:id="@+id/tvStockNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="MH-41 50987"
+            android:textColor="#777777"
+            android:textSize="10sp" />
+
+        <!-- Availability -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginTop="8dp"
+            android:background="#F5F3F3"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="8dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Availability"
+                android:textColor="#555555"
+                android:textSize="10sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvAvailability"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bought"
+                    android:textColor="#222222"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvPhotosUploaded"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Photos uploaded"
+                    android:textColor="#222222"
+                    android:textSize="9sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

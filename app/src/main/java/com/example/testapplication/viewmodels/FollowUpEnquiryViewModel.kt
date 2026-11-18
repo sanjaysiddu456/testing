@@ -1,4 +1,4 @@
-package com.example.testapplication
+package com.example.testapplication.viewmodels
 
 import android.content.Context
 import androidx.lifecycle.LiveData
@@ -8,9 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.testapplication.datamodels.CreateFollowUpResponse
 import com.example.testapplication.datamodels.NewFollowUpRequest
-import com.example.testapplication.datamodels.responseGetEnquiries
 import com.example.testapplication.datamodels.responseGetFollowUps
-import com.example.testapplication.enquiryFeature.EnquiryViewModel
 import com.example.testapplication.network.ApiProvider
 import com.example.testapplication.network.RepositoryApprik
 import com.example.testapplication.utils.ApiStatus

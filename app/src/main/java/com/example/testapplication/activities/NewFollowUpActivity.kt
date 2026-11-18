@@ -1,13 +1,15 @@
-package com.example.testapplication
+package com.example.testapplication.activities
 
+import android.R
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
-import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.example.testapplication.viewmodels.FollowUpEnquiryViewModel
+import com.example.testapplication.viewmodels.FollowUpEnquiryViewModelFactory
 import com.example.testapplication.databinding.ActivityNewFollowUpBinding
 import com.example.testapplication.datamodels.NewFollowUpRequest
 import com.example.testapplication.utils.ApiStatus
@@ -75,12 +77,12 @@ class NewFollowUpActivity : AppCompatActivity() {
 
         val adapter = ArrayAdapter(
             this,
-            android.R.layout.simple_spinner_item,
+            R.layout.simple_spinner_item,
             followUpTypes
         )
 
         adapter.setDropDownViewResource(
-            android.R.layout.simple_spinner_dropdown_item
+            R.layout.simple_spinner_dropdown_item
         )
 
         binding.spinnerFollowUpType.adapter = adapter
@@ -111,7 +113,7 @@ class NewFollowUpActivity : AppCompatActivity() {
                     binding.tvSelectedDate.text = selectedDate
 
                     binding.tvSelectedDate.setTextColor(
-                        getColor(android.R.color.black)
+                        getColor(R.color.black)
                     )
                 },
                 calendar.get(Calendar.YEAR),
@@ -145,7 +147,7 @@ class NewFollowUpActivity : AppCompatActivity() {
                     binding.tvSelectedTime.text = selectedTime
 
                     binding.tvSelectedTime.setTextColor(
-                        getColor(android.R.color.black)
+                        getColor(R.color.black)
                     )
                 },
                 calendar.get(Calendar.HOUR_OF_DAY),

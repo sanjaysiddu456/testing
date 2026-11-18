@@ -1,4 +1,4 @@
-package com.example.testapplication
+package com.example.testapplication.activities
 
 import com.example.testapplication.adapters.StockImageAdapter
 

@@ -7,11 +7,10 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.testapplication.FollowUpEnquiryViewModel
+import com.example.testapplication.viewmodels.FollowUpEnquiryViewModel
 import com.example.testapplication.adapter.FollowUpAdapter
 import com.example.testapplication.datamodels.Enquiry
 import com.example.testapplication.datamodels.FollowUp

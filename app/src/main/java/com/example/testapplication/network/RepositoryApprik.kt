@@ -2,7 +2,9 @@ package com.example.testapplication.network
 
 import android.content.Context
 import com.example.testapplication.datamodels.CreateFollowUpResponse
+import com.example.testapplication.datamodels.DashboardResponse
 import com.example.testapplication.datamodels.NewFollowUpRequest
+import com.example.testapplication.datamodels.ReportsResponse
 import com.example.testapplication.datamodels.StockResponse
 import com.example.testapplication.datamodels.responseGetEnquiries
 import com.example.testapplication.datamodels.responseGetFollowUps
@@ -144,6 +146,74 @@ class RepositoryApprik(
                 apiResponse.errorBody()?.string()
                     ?: "Unable to fetch stocks"
             )
+        }
+        */
+
+    }.flowOn(Dispatchers.IO)
+
+
+    suspend fun getDashboard(): Flow<DashboardResponse> = flow {
+
+        // =====================================
+        // DUMMY JSON RESPONSE
+        // =====================================
+
+        val json = context.assets.open("dashboard.json")
+            .bufferedReader()
+            .use { it.readText() }
+
+        val response = Gson().fromJson(
+            json,
+            DashboardResponse::class.java
+        )
+
+        emit(response)
+
+        // =====================================
+        // ACTUAL API CALL - UNCOMMENT LATER
+        // =====================================
+
+        /*
+        val response = apiService.getDashboard()
+
+        if (response.isSuccessful && response.body() != null) {
+            emit(response.body()!!)
+        } else {
+            throw Exception(response.message())
+        }
+        */
+
+    }.flowOn(Dispatchers.IO)
+
+
+    suspend fun getReports(): Flow<ReportsResponse> = flow {
+
+        // =====================================
+        // DUMMY JSON RESPONSE
+        // =====================================
+
+        val json = context.assets.open("reports.json")
+            .bufferedReader()
+            .use { it.readText() }
+
+        val response = Gson().fromJson(
+            json,
+            ReportsResponse::class.java
+        )
+
+        emit(response)
+
+        // =====================================
+        // ACTUAL API CALL - ENABLE LATER
+        // =====================================
+
+        /*
+        val response = apiService.getReports()
+
+        if (response.isSuccessful && response.body() != null) {
+            emit(response.body()!!)
+        } else {
+            throw Exception(response.message())
         }
         */
 

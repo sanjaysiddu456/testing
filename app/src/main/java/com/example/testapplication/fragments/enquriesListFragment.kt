@@ -1,4 +1,4 @@
-package com.example.testapplication
+package com.example.testapplication.fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,20 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.testapplication.adapters.EnquiryAdapter
 import com.example.testapplication.databinding.FragmentEnquriesListBinding
 import com.example.testapplication.enquiryFeature.EnquiryViewModel
 import com.example.testapplication.enquiryFeature.EnquiryViewModelFactory
-import com.example.testapplication.network.ApiProvider
-import com.example.testapplication.network.ApiService
-import com.example.testapplication.network.RepositoryApprik
+import com.example.testapplication.enquiryFeature.SellingEnquiryDetailsActivity
 import com.example.testapplication.utils.ApiStatus
-
-import kotlinx.coroutines.launch
 
 class enquriesListFragment : Fragment() {
 

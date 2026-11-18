@@ -1,7 +1,8 @@
-package com.example.testapplication
+package com.example.testapplication.activities
 
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -9,9 +10,11 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.example.testapplication.R
+import com.example.testapplication.viewmodels.StockViewModel
+import com.example.testapplication.viewmodels.StockViewModelFactory
 import com.example.testapplication.adapters.StockEnquiryAdapter
 import com.example.testapplication.databinding.ActivityStockDetailsBinding
+import com.example.testapplication.datamodels.Stock
 import com.example.testapplication.utils.ApiStatus
 
 class StockDetailsActivity : AppCompatActivity() {
@@ -165,7 +168,7 @@ class StockDetailsActivity : AppCompatActivity() {
 
 
     private fun displayStockDetails(
-        stock: com.example.testapplication.datamodels.Stock
+        stock: Stock
     ) {
 
         binding.tvDetailsCarName.text = stock.carName
@@ -176,9 +179,9 @@ class StockDetailsActivity : AppCompatActivity() {
 
         binding.tvDetailsAvailability.setTextColor(
             if (stock.availability.equals("In Stock", true)) {
-                android.graphics.Color.rgb(0, 159, 227)
+                Color.rgb(0, 159, 227)
             } else {
-                android.graphics.Color.BLACK
+                Color.BLACK
             }
         )
 

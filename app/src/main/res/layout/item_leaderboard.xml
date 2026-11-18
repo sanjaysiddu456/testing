@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="30dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="8dp"
+    android:background="@android:color/white">
+
+    <TextView
+        android:id="@+id/tvLeaderboardConsultantName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.6"
+        android:text="Anujkumar"
+        android:textColor="#222222"
+        android:textSize="9sp"
+        android:maxLines="1" />
+
+    <TextView
+        android:id="@+id/tvLeaderboardFollowUps"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="16"
+        android:textColor="#222222"
+        android:textSize="9sp" />
+
+    <TextView
+        android:id="@+id/tvLeaderboardInvoiceCount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.2"
+        android:gravity="center"
+        android:text="14"
+        android:textColor="#222222"
+        android:textSize="9sp" />
+
+</LinearLayout>

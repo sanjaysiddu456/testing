@@ -2,6 +2,7 @@ package com.example.testapplication.network
 
 import com.example.testapplication.datamodels.CreateFollowUpResponse
 import com.example.testapplication.datamodels.NewFollowUpRequest
+import com.example.testapplication.datamodels.ReportsResponse
 import com.example.testapplication.datamodels.StockResponse
 import com.example.testapplication.datamodels.responseGetEnquiries
 import retrofit2.Response
@@ -22,5 +23,8 @@ interface ApiService {
 
     @GET("stocks")
     suspend fun getStocks(): Response<StockResponse>
+
+    @GET("reports")
+    suspend fun getReports(): retrofit2.Response<ReportsResponse>
 
 }

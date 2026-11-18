@@ -1,4 +1,4 @@
-package com.example.testapplication
+package com.example.testapplication.fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,9 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.testapplication.R
+import com.example.testapplication.activities.StockDetailsActivity
 import com.example.testapplication.adapters.StockAdapter
 import com.example.testapplication.databinding.FragmentStockBinding
 import com.example.testapplication.utils.ApiStatus
+import com.example.testapplication.viewmodels.StockViewModel
+import com.example.testapplication.viewmodels.StockViewModelFactory
 
 class StockFragment : Fragment(R.layout.fragment_stock) {
 
@@ -77,16 +80,13 @@ class StockFragment : Fragment(R.layout.fragment_stock) {
 
         viewModel.stockResponse.observe(viewLifecycleOwner) { resource ->
 
-            binding.progressStocks.visibility = View.GONE
-            binding.rvStocks.visibility = View.GONE
-            binding.layoutNoStocks.visibility = View.GONE
-            binding.layoutStockError.visibility = View.GONE
-
             when (resource.status) {
 
                 ApiStatus.Status.LOADING -> {
 
-                    binding.progressStocks.visibility = View.VISIBLE
+                    binding.rvStocks.visibility = View.GONE
+
+                    // If you have a progress bar, show it here.
                 }
 
                 ApiStatus.Status.SUCCESS -> {
@@ -96,28 +96,35 @@ class StockFragment : Fragment(R.layout.fragment_stock) {
                     if (stocks.isNotEmpty()) {
 
                         binding.rvStocks.visibility = View.VISIBLE
+
                         stockAdapter.submitList(stocks)
 
                     } else {
 
-                        binding.layoutNoStocks.visibility = View.VISIBLE
+                        binding.rvStocks.visibility = View.GONE
+
+                        Toast.makeText(
+                            requireContext(),
+                            "No stocks available",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
 
                 ApiStatus.Status.ERROR -> {
 
-                    binding.layoutStockError.visibility = View.VISIBLE
+                    binding.rvStocks.visibility = View.GONE
 
-                    binding.tvStockError.text =
-                        resource.message ?: "Unable to load stocks"
+                    Toast.makeText(
+                        requireContext(),
+                        resource.message ?: "Unable to fetch stocks",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
-
-        binding.btnRetryStocks.setOnClickListener {
-            viewModel.getStocks()
-        }
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

@@ -64,9 +64,9 @@ class StockDetailsActivity : AppCompatActivity() {
 
     private fun setupClickListeners() {
 
-        binding.btnBack.setOnClickListener {
-            finish()
-        }
+//        binding.btnBack.setOnClickListener {
+//            finish()
+//        }
     }
 
     // ==========================================
@@ -85,7 +85,10 @@ class StockDetailsActivity : AppCompatActivity() {
 
             adapter = enquiryAdapter
 
-            isNestedScrollingEnabled = false
+            // Allow only the enquiry list to scroll
+            isNestedScrollingEnabled = true
+
+            setHasFixedSize(false)
         }
     }
 

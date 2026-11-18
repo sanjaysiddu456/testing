@@ -1,3 +1,4 @@
+
 {
   "status": true,
   "message": "Stocks fetched successfully",
@@ -8,12 +9,11 @@
       "stockNumber": "MH-41 50987",
       "availability": "Bought",
       "photosUploaded": true,
-      "photoCount": 4,
+      "photoCount": 3,
       "images": [
-        "creta_front",
-        "creta_side",
-        "creta_rear",
-        "creta_interior"
+        "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1200",
+        "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=1200",
+        "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?w=1200"
       ],
       "stockDate": "20 Aug, 2026",
       "enquiries": [
@@ -23,13 +23,6 @@
           "mobileNumber": "9087654321",
           "isCertified": true,
           "lastEnquiredOn": "20th Aug 2026"
-        },
-        {
-          "id": 2,
-          "customerName": "Anuradha",
-          "mobileNumber": "9087654321",
-          "isCertified": true,
-          "lastEnquiredOn": "19th Aug 2026"
         }
       ]
     },
@@ -41,19 +34,11 @@
       "photosUploaded": true,
       "photoCount": 2,
       "images": [
-        "i20_front",
-        "i20_side"
+        "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1200",
+        "https://images.unsplash.com/photo-1507136566006-cfc505b114fc?w=1200"
       ],
       "stockDate": "20 Aug, 2026",
-      "enquiries": [
-        {
-          "id": 3,
-          "customerName": "Anuradha",
-          "mobileNumber": "9087654321",
-          "isCertified": true,
-          "lastEnquiredOn": "19th Aug 2026"
-        }
-      ]
+      "enquiries": []
     },
     {
       "id": 3,

@@ -1,9 +1,10 @@
-package com.example.testapplication.adapters
 
+package com.example.testapplication.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.testapplication.R
 import com.example.testapplication.databinding.ItemStockFullImageBinding
 
@@ -15,24 +16,14 @@ class StockImageAdapter(
         private val binding: ItemStockFullImageBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(imageName: String) {
+        fun bind(imageUrl: String) {
 
-            val imageResource = binding.root.context.resources.getIdentifier(
-                imageName,
-                "drawable",
-                binding.root.context.packageName
-            )
-
-            if (imageResource != 0) {
-
-                binding.ivFullStockImage.setImageResource(imageResource)
-
-            } else {
-
-                binding.ivFullStockImage.setImageResource(
-                    R.drawable.ic_launcher_background
-                )
-            }
+            Glide.with(binding.root.context)
+                .load(imageUrl)
+                .placeholder(R.drawable.ic_launcher_background)
+                .error(R.drawable.ic_launcher_background)
+                .fitCenter()
+                .into(binding.ivFullStockImage)
         }
     }
 

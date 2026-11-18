@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.example.testapplication.R
 import com.example.testapplication.adapters.StockEnquiryAdapter
 import com.example.testapplication.databinding.ActivityStockDetailsBinding
@@ -159,6 +160,7 @@ class StockDetailsActivity : AppCompatActivity() {
     // DISPLAY STOCK DETAILS
     // ==========================================
 
+
     private fun displayStockDetails(
         stock: com.example.testapplication.datamodels.Stock
     ) {
@@ -180,35 +182,32 @@ class StockDetailsActivity : AppCompatActivity() {
         binding.tvStockDate.text =
             "In stock from ${stock.stockDate}"
 
-        // Display the first available image.
+        // Load first image from URL
+        val firstImageUrl = stock.images.firstOrNull()
 
-        val firstImage = stock.images.firstOrNull()
+        if (!firstImageUrl.isNullOrBlank()) {
 
-        val imageResource = firstImage?.let {
-            resources.getIdentifier(
-                it,
-                "drawable",
-                packageName
-            )
-        } ?: 0
+            Glide.with(this)
+                .load(firstImageUrl)
 
-        if (imageResource != 0) {
-            binding.ivStockDetailsImage.setImageResource(imageResource)
+                .centerCrop()
+                .into(binding.ivStockDetailsImage)
+
+            // Open full-screen image viewer
+            binding.ivStockDetailsImage.setOnClickListener {
+                openStockImageViewer(stock.images)
+            }
+
         } else {
-            binding.ivStockDetailsImage.setImageResource(
-                R.drawable.ic_launcher_background
-            )
+
+            Glide.with(this).clear(binding.ivStockDetailsImage)
+
+
+
+            binding.ivStockDetailsImage.setOnClickListener(null)
         }
 
-        // Open full-screen image viewer.
-
-        binding.ivStockDetailsImage.setOnClickListener {
-
-            openStockImageViewer(stock.images)
-        }
-
-        // Display enquiries.
-
+        // Display enquiries
         if (stock.enquiries.isNotEmpty()) {
 
             binding.rvStockEnquiries.visibility = View.VISIBLE

@@ -1,13 +1,14 @@
-package com.example.testapplication.adapters
 
+package com.example.testapplication.adapters
 
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.testapplication.R
+import com.example.testapplication.databinding.ItemStockBinding
 import com.example.testapplication.datamodels.Stock
 
 class StockAdapter(
@@ -16,14 +17,12 @@ class StockAdapter(
 
     inner class StockViewHolder(
         private val binding: ItemStockBinding
-    ) : RecyclerView.ViewHolder(binding.root) {
+    ) : androidx.recyclerview.widget.RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Stock) {
 
             binding.tvStockCarName.text = item.carName
-
             binding.tvStockNumber.text = item.stockNumber
-
             binding.tvAvailability.text = item.availability
 
             binding.tvPhotosUploaded.text =
@@ -41,28 +40,11 @@ class StockAdapter(
                 }
             )
 
-            // Resolve drawable name from JSON
-
-            val imageResource = item.imageResId.takeIf {
-                it.isNotBlank()
-            }?.let {
-                binding.root.context.resources.getIdentifier(
-                    it,
-                    "drawable",
-                    binding.root.context.packageName
-                )
-            } ?: 0
-
-            if (imageResource != 0) {
-
-                binding.ivStockImage.setImageResource(imageResource)
-
-            } else {
-
-                binding.ivStockImage.setImageResource(
-                    R.drawable.ic_stock_placeholder
-                )
-            }
+            // Load image from URL
+            Glide.with(binding.root.context)
+                .load(item.images.firstOrNull())
+                .centerCrop()
+                .into(binding.ivStockImage)
 
             binding.tvPhotoCount.text =
                 String.format("%02d", item.photoCount)

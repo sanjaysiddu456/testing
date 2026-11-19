@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <TextView
+            style="@style/SellingLabel"
+            android:text="Enquiry No"/>
+
+        <EditText
+            android:id="@+id/etEnquiryNo"
+            style="@style/SellingEditText"
+            android:hint="Enter Enquiry No"/>
+
+        <TextView
+            style="@style/SellingLabel"
+            android:text="Enquiry Date"/>
+
+        <EditText
+            android:id="@+id/etEnquiryDate"
+            style="@style/SellingEditText"
+            android:hint="Enter Enquiry Date"
+            android:focusable="false"
+            android:clickable="true"/>
+
+        <TextView
+            style="@style/SellingLabel"
+            android:text="Enquiry Source"/>
+
+        <Spinner
+            android:id="@+id/spEnquirySource"
+            style="@style/SellingSpinner"/>
+
+        <TextView
+            style="@style/SellingLabel"
+            android:text="Enquiry Sub Source"/>
+
+        <Spinner
+            android:id="@+id/spEnquirySubSource"
+            style="@style/SellingSpinner"/>
+
+        <TextView
+            style="@style/SellingLabel"
+            android:text="Maker *"/>
+
+        <Spinner
+            android:id="@+id/spMaker"
+            style="@style/SellingSpinner"/>
+
+        <TextView
+            style="@style/SellingLabel"
+            android:text="Model *"/>
+
+        <Spinner
+            android:id="@+id/spModel"
+            style="@style/SellingSpinner"/>
+
+        <TextView
+            style="@style/SellingLabel"
+            android:text="Variant"/>
+
+        <Spinner
+            android:id="@+id/spVariant"
+            style="@style/SellingSpinner"/>
+
+        <TextView
+            style="@style/SellingLabel"
+            android:text="Fuel Type *"/>
+
+        <Spinner
+            android:id="@+id/spFuelType"
+            style="@style/SellingSpinner"/>
+
+        <TextView
+            style="@style/SellingLabel"
+            android:text="Registration No"/>
+
+        <EditText
+            android:id="@+id/etRegistrationNo"
+            style="@style/SellingEditText"
+            android:hint="Enter Registration Name"
+            android:inputType="textCapCharacters"/>
+
+        <Button
+            android:id="@+id/btnCreate"
+            style="@style/SellingButton"
+            android:text="Create"/>
+
+    </LinearLayout>
+
+</ScrollView>

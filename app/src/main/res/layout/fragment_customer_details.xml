@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="#FFFFFF"
+    android:descendantFocusability="afterDescendants">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <TextView
+            style="@style/SellingLabel"
+            android:text="Search Mobile No *"/>
+
+        <EditText
+            android:id="@+id/etMobile"
+            style="@style/SellingEditText"
+            android:hint="Mobile No"
+            android:inputType="phone"
+            android:maxLength="10"/>
+
+        <TextView
+            style="@style/SellingLabel"
+            android:text="Customer Name"/>
+
+        <EditText
+            android:id="@+id/etCustomerName"
+            style="@style/SellingEditText"
+            android:hint="Enter Customer Name"
+            android:inputType="textPersonName"/>
+
+        <TextView
+            style="@style/SellingLabel"
+            android:text="Customer Type"/>
+
+        <Spinner
+            android:id="@+id/spCustomerType"
+            style="@style/SellingSpinner"/>
+
+        <TextView
+            style="@style/SellingLabel"
+            android:text="Select Gender"/>
+
+        <Spinner
+            android:id="@+id/spGender"
+            style="@style/SellingSpinner"/>
+
+        <TextView
+            style="@style/SellingLabel"
+            android:text="Email"/>
+
+        <EditText
+            android:id="@+id/etEmail"
+            style="@style/SellingEditText"
+            android:hint="Enter Email ID"
+            android:inputType="textEmailAddress"/>
+
+        <TextView
+            style="@style/SellingLabel"
+            android:text="Select State"/>
+
+        <Spinner
+            android:id="@+id/spState"
+            style="@style/SellingSpinner"/>
+
+        <TextView
+            style="@style/SellingLabel"
+            android:text="Select District"/>
+
+        <Spinner
+            android:id="@+id/spDistrict"
+            style="@style/SellingSpinner"/>
+
+        <TextView
+            style="@style/SellingLabel"
+            android:text="Select City"/>
+
+        <Spinner
+            android:id="@+id/spCity"
+            style="@style/SellingSpinner"/>
+
+        <TextView
+            style="@style/SellingLabel"
+            android:text="Enter Address"/>
+
+        <EditText
+            android:id="@+id/etAddress"
+            style="@style/SellingEditText"
+            android:hint="Select Address"
+            android:inputType="textPostalAddress"/>
+
+        <TextView
+            style="@style/SellingLabel"
+            android:text="Pin Code"/>
+
+        <EditText
+            android:id="@+id/etPinCode"
+            style="@style/SellingEditText"
+            android:hint="Enter Pincode"
+            android:inputType="number"
+            android:maxLength="6"/>
+
+        <TextView
+            style="@style/SellingLabel"
+            android:text="WhatsApp No"/>
+
+        <EditText
+            android:id="@+id/etWhatsapp"
+            style="@style/SellingEditText"
+            android:hint="Enter Whatsapp"
+            android:inputType="phone"
+            android:maxLength="10"/>
+
+        <Button
+            android:id="@+id/btnContinue"
+            style="@style/SellingButton"
+            android:text="Continue" />
+
+    </LinearLayout>
+
+</ScrollView>

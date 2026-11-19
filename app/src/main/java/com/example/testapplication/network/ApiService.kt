@@ -1,6 +1,8 @@
 package com.example.testapplication.network
 
 import com.example.testapplication.datamodels.CreateFollowUpResponse
+import com.example.testapplication.datamodels.CreateSellingEnquiryRequest
+import com.example.testapplication.datamodels.CreateSellingEnquiryResponse
 import com.example.testapplication.datamodels.DashboardResponse
 import com.example.testapplication.datamodels.EnquiryDetailsResponse
 import com.example.testapplication.datamodels.FollowUpResponse
@@ -55,4 +57,12 @@ interface ApiService {
         @Path("enquiryId") enquiryId: Int,
         @Header("Authorization") token: String
     ): retrofit2.Response<FollowUpResponse>
+
+
+    @POST("selling-enquiry/create")
+    suspend fun createSellingEnquiry(
+        @Header("Authorization") token: String,
+        @Body request: CreateSellingEnquiryRequest
+    ): CreateSellingEnquiryResponse
+
 }

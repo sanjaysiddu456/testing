@@ -2,6 +2,8 @@ package com.example.testapplication.network
 
 import android.content.Context
 import com.example.testapplication.datamodels.CreateFollowUpResponse
+import com.example.testapplication.datamodels.CreateSellingEnquiryRequest
+import com.example.testapplication.datamodels.CreateSellingEnquiryResponse
 import com.example.testapplication.datamodels.DashboardResponse
 import com.example.testapplication.datamodels.EnquiryDetailsResponse
 import com.example.testapplication.datamodels.FollowUpResponse
@@ -307,6 +309,18 @@ class RepositoryApprik(
     }.flowOn(Dispatchers.IO)
 
 
+    fun createSellingEnquiry(
+        token: String,
+        request: CreateSellingEnquiryRequest
+    ): Flow<CreateSellingEnquiryResponse> = flow {
 
+        val response = apiService.createSellingEnquiry(
+            token = "Bearer $token",
+            request = request
+        )
+
+        emit(response)
+
+    }.flowOn(Dispatchers.IO)
 
 }

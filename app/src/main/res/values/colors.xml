@@ -4,4 +4,10 @@
     <color name="white">#FFFFFFFF</color>
     <color name="stock_dot_selected">#00AEEF</color>
     <color name="stock_dot_unselected">#BDBDBD</color>
+    <color name="selling_navy">#003768</color>
+    <color name="selling_text">#222222</color>
+    <color name="selling_hint">#999999</color>
+    <color name="selling_divider">#E5E5E5</color>
+    <color name="selling_background">#FFFFFF</color>
+    <color name="selling_tab_unselected">#777777</color>
 </resources>

@@ -1,3 +1,4 @@
+
 package com.example.testapplication.fragments
 
 import android.app.DatePickerDialog
@@ -5,14 +6,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.example.testapplication.R
 import com.example.testapplication.activities.CreateSellingEnquiryActivity
 import com.example.testapplication.adapters.CustomSpinnerAdapter
+import com.example.testapplication.databinding.FragmentEnquiryDetailsBinding
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -31,42 +29,33 @@ data class EnquiryDetails(
 
 class EnquiryDetailsFragment : Fragment() {
 
-    private lateinit var etEnquiryNo: EditText
-    private lateinit var etEnquiryDate: EditText
-    private lateinit var etRegistrationNo: EditText
-
-    private lateinit var spEnquirySource: Spinner
-    private lateinit var spEnquirySubSource: Spinner
-    private lateinit var spMaker: Spinner
-    private lateinit var spModel: Spinner
-    private lateinit var spVariant: Spinner
-    private lateinit var spFuelType: Spinner
-
-    private lateinit var btnCreate: Button
+    private var _binding: FragmentEnquiryDetailsBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(
-            R.layout.fragment_enquiry_details,
+        _binding = FragmentEnquiryDetailsBinding.inflate(
+            inflater,
             container,
             false
         )
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initializeViews(view)
         setupSpinners()
 
-        etEnquiryDate.setOnClickListener {
+        binding.etEnquiryDate.setOnClickListener {
             showDatePicker()
         }
 
-        btnCreate.setOnClickListener {
+        binding.btnCreate.setOnClickListener {
+
             val enquiry = validateAndGetData()
 
             if (enquiry != null) {
@@ -76,26 +65,10 @@ class EnquiryDetailsFragment : Fragment() {
         }
     }
 
-    private fun initializeViews(view: View) {
-
-        etEnquiryNo = view.findViewById(R.id.etEnquiryNo)
-        etEnquiryDate = view.findViewById(R.id.etEnquiryDate)
-        etRegistrationNo = view.findViewById(R.id.etRegistrationNo)
-
-        spEnquirySource = view.findViewById(R.id.spEnquirySource)
-        spEnquirySubSource = view.findViewById(R.id.spEnquirySubSource)
-        spMaker = view.findViewById(R.id.spMaker)
-        spModel = view.findViewById(R.id.spModel)
-        spVariant = view.findViewById(R.id.spVariant)
-        spFuelType = view.findViewById(R.id.spFuelType)
-
-        btnCreate = view.findViewById(R.id.btnCreate)
-    }
-
     private fun setupSpinners() {
 
         setSpinner(
-            spEnquirySource,
+            binding.spEnquirySource,
             listOf(
                 "Select Source",
                 "Walk-in",
@@ -106,7 +79,7 @@ class EnquiryDetailsFragment : Fragment() {
         )
 
         setSpinner(
-            spEnquirySubSource,
+            binding.spEnquirySubSource,
             listOf(
                 "Select Sub Source",
                 "Google",
@@ -117,7 +90,7 @@ class EnquiryDetailsFragment : Fragment() {
         )
 
         setSpinner(
-            spMaker,
+            binding.spMaker,
             listOf(
                 "Select Maker",
                 "Hyundai",
@@ -128,7 +101,7 @@ class EnquiryDetailsFragment : Fragment() {
         )
 
         setSpinner(
-            spModel,
+            binding.spModel,
             listOf(
                 "Select Model",
                 "Creta",
@@ -139,7 +112,7 @@ class EnquiryDetailsFragment : Fragment() {
         )
 
         setSpinner(
-            spVariant,
+            binding.spVariant,
             listOf(
                 "Select Variant",
                 "Base",
@@ -149,7 +122,7 @@ class EnquiryDetailsFragment : Fragment() {
         )
 
         setSpinner(
-            spFuelType,
+            binding.spFuelType,
             listOf(
                 "Select Fuel Type",
                 "Petrol",
@@ -161,7 +134,7 @@ class EnquiryDetailsFragment : Fragment() {
     }
 
     private fun setSpinner(
-        spinner: Spinner,
+        spinner: android.widget.Spinner,
         values: List<String>
     ) {
         spinner.adapter = CustomSpinnerAdapter(
@@ -188,7 +161,7 @@ class EnquiryDetailsFragment : Fragment() {
                     Locale.getDefault()
                 ).format(selectedDate.time)
 
-                etEnquiryDate.setText(formattedDate)
+                binding.etEnquiryDate.setText(formattedDate)
             },
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH),
@@ -198,33 +171,33 @@ class EnquiryDetailsFragment : Fragment() {
 
     fun validateAndGetData(): EnquiryDetails? {
 
-        val enquiryNo = etEnquiryNo.text.toString().trim()
-        val enquiryDate = etEnquiryDate.text.toString().trim()
-        val registrationNo = etRegistrationNo.text.toString().trim()
+        val enquiryNo = binding.etEnquiryNo.text.toString().trim()
+        val enquiryDate = binding.etEnquiryDate.text.toString().trim()
+        val registrationNo = binding.etRegistrationNo.text.toString().trim()
 
         if (enquiryNo.isEmpty()) {
-            etEnquiryNo.error = "Enter enquiry number"
-            etEnquiryNo.requestFocus()
+            binding.etEnquiryNo.error = "Enter enquiry number"
+            binding.etEnquiryNo.requestFocus()
             return null
         }
 
         if (enquiryDate.isEmpty()) {
-            etEnquiryDate.error = "Select enquiry date"
-            etEnquiryDate.requestFocus()
+            binding.etEnquiryDate.error = "Select enquiry date"
+            binding.etEnquiryDate.requestFocus()
             return null
         }
 
-        if (spMaker.selectedItemPosition == 0) {
+        if (binding.spMaker.selectedItemPosition == 0) {
             showMessage("Select maker")
             return null
         }
 
-        if (spModel.selectedItemPosition == 0) {
+        if (binding.spModel.selectedItemPosition == 0) {
             showMessage("Select model")
             return null
         }
 
-        if (spFuelType.selectedItemPosition == 0) {
+        if (binding.spFuelType.selectedItemPosition == 0) {
             showMessage("Select fuel type")
             return null
         }
@@ -232,17 +205,19 @@ class EnquiryDetailsFragment : Fragment() {
         return EnquiryDetails(
             enquiryNo = enquiryNo,
             enquiryDate = enquiryDate,
-            enquirySource = getSelectedValue(spEnquirySource),
-            enquirySubSource = getSelectedValue(spEnquirySubSource),
-            maker = spMaker.selectedItem.toString(),
-            model = spModel.selectedItem.toString(),
-            variant = getSelectedValue(spVariant),
-            fuelType = spFuelType.selectedItem.toString(),
+            enquirySource = getSelectedValue(binding.spEnquirySource),
+            enquirySubSource = getSelectedValue(binding.spEnquirySubSource),
+            maker = binding.spMaker.selectedItem.toString(),
+            model = binding.spModel.selectedItem.toString(),
+            variant = getSelectedValue(binding.spVariant),
+            fuelType = binding.spFuelType.selectedItem.toString(),
             registrationNo = registrationNo
         )
     }
 
-    private fun getSelectedValue(spinner: Spinner): String {
+    private fun getSelectedValue(
+        spinner: android.widget.Spinner
+    ): String {
         return if (spinner.selectedItemPosition == 0) {
             ""
         } else {
@@ -251,10 +226,14 @@ class EnquiryDetailsFragment : Fragment() {
     }
 
     fun setCreateLoading(isLoading: Boolean) {
-        if (!::btnCreate.isInitialized) return
 
-        btnCreate.isEnabled = !isLoading
-        btnCreate.text = if (isLoading) "Creating..." else "Create"
+        _binding?.let { binding ->
+
+            binding.btnCreate.isEnabled = !isLoading
+
+            binding.btnCreate.text =
+                if (isLoading) "Creating..." else "Create"
+        }
     }
 
     private fun showMessage(message: String) {
@@ -263,5 +242,10 @@ class EnquiryDetailsFragment : Fragment() {
             message,
             Toast.LENGTH_SHORT
         ).show()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

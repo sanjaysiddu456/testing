@@ -1,34 +1,26 @@
+
 package com.example.testapplication.activities
 
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.testapplication.R
+
 import com.example.testapplication.datamodels.CreateSellingEnquiryRequest
 import com.example.testapplication.fragments.CustomerDetails
 import com.example.testapplication.fragments.CustomerDetailsFragment
 import com.example.testapplication.fragments.EnquiryDetails
 import com.example.testapplication.fragments.EnquiryDetailsFragment
-import com.example.testapplication.utils.ApiStatus
 import com.example.testapplication.viewmodels.CreateSellingEnquiryViewModel
 import com.example.testapplication.viewmodels.CreateSellingEnquiryViewModelFactory
 
 class CreateSellingEnquiryActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityCreateSellingEnquiryBinding
+
     private lateinit var viewModel: CreateSellingEnquiryViewModel
-
-    private lateinit var btnBack: ImageView
-    private lateinit var tvStepCount: TextView
-    private lateinit var tvCustomerTab: TextView
-    private lateinit var tvEnquiryTab: TextView
-
-    private lateinit var customerIndicator: View
-    private lateinit var enquiryIndicator: View
 
     private var customerFragment: CustomerDetailsFragment? = null
     private var enquiryFragment: EnquiryDetailsFragment? = null
@@ -44,26 +36,15 @@ class CreateSellingEnquiryActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_create_selling_enquiry)
 
-        initializeViews()
+        binding = ActivityCreateSellingEnquiryBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         initializeViewModel()
         initializeFragments(savedInstanceState)
         setupListeners()
         observeCreateEnquiry()
         updateTabUI()
-    }
-
-    private fun initializeViews() {
-
-        btnBack = findViewById(R.id.btnBack)
-        tvStepCount = findViewById(R.id.tvStepCount)
-
-        tvCustomerTab = findViewById(R.id.tvCustomerTab)
-        tvEnquiryTab = findViewById(R.id.tvEnquiryTab)
-
-        customerIndicator = findViewById(R.id.customerIndicator)
-        enquiryIndicator = findViewById(R.id.enquiryIndicator)
     }
 
     private fun initializeViewModel() {
@@ -111,7 +92,8 @@ class CreateSellingEnquiryActivity : AppCompatActivity() {
 
     private fun setupListeners() {
 
-        btnBack.setOnClickListener {
+        binding.btnBack.setOnClickListener {
+
             if (currentStep == 2) {
                 navigateToCustomer()
             } else {
@@ -119,13 +101,15 @@ class CreateSellingEnquiryActivity : AppCompatActivity() {
             }
         }
 
-        tvCustomerTab.setOnClickListener {
+        binding.tvCustomerTab.setOnClickListener {
+
             if (currentStep == 2) {
                 navigateToCustomer()
             }
         }
 
-        tvEnquiryTab.setOnClickListener {
+        binding.tvEnquiryTab.setOnClickListener {
+
             if (currentStep == 1) {
 
                 val customerData =
@@ -141,11 +125,15 @@ class CreateSellingEnquiryActivity : AppCompatActivity() {
     fun navigateToEnquiry() {
 
         val customer = customerFragment?.validateAndGetData() ?: return
+
+        val customerFrag = customerFragment ?: return
+        val enquiryFrag = enquiryFragment ?: return
+
         currentStep = 2
 
         supportFragmentManager.beginTransaction()
-            .hide(customerFragment!!)
-            .show(enquiryFragment!!)
+            .hide(customerFrag)
+            .show(enquiryFrag)
             .commit()
 
         updateTabUI()
@@ -153,11 +141,14 @@ class CreateSellingEnquiryActivity : AppCompatActivity() {
 
     fun navigateToCustomer() {
 
+        val customerFrag = customerFragment ?: return
+        val enquiryFrag = enquiryFragment ?: return
+
         currentStep = 1
 
         supportFragmentManager.beginTransaction()
-            .hide(enquiryFragment!!)
-            .show(customerFragment!!)
+            .hide(enquiryFrag)
+            .show(customerFrag)
             .commit()
 
         updateTabUI()
@@ -165,7 +156,7 @@ class CreateSellingEnquiryActivity : AppCompatActivity() {
 
     private fun updateTabUI() {
 
-        tvStepCount.text =
+        binding.tvStepCount.text =
             if (currentStep == 1) "01/02" else "02/02"
 
         val selectedColor = getColor(R.color.selling_navy)
@@ -173,25 +164,45 @@ class CreateSellingEnquiryActivity : AppCompatActivity() {
 
         if (currentStep == 1) {
 
-            tvCustomerTab.setTextColor(selectedColor)
-            tvEnquiryTab.setTextColor(unselectedColor)
+            binding.tvCustomerTab.setTextColor(selectedColor)
+            binding.tvEnquiryTab.setTextColor(unselectedColor)
 
-            tvCustomerTab.setTypeface(null, android.graphics.Typeface.BOLD)
-            tvEnquiryTab.setTypeface(null, android.graphics.Typeface.NORMAL)
+            binding.tvCustomerTab.setTypeface(
+                null,
+                android.graphics.Typeface.BOLD
+            )
 
-            customerIndicator.setBackgroundColor(selectedColor)
-            enquiryIndicator.setBackgroundColor(android.graphics.Color.TRANSPARENT)
+            binding.tvEnquiryTab.setTypeface(
+                null,
+                android.graphics.Typeface.NORMAL
+            )
+
+            binding.customerIndicator.setBackgroundColor(selectedColor)
+
+            binding.enquiryIndicator.setBackgroundColor(
+                android.graphics.Color.TRANSPARENT
+            )
 
         } else {
 
-            tvCustomerTab.setTextColor(unselectedColor)
-            tvEnquiryTab.setTextColor(selectedColor)
+            binding.tvCustomerTab.setTextColor(unselectedColor)
+            binding.tvEnquiryTab.setTextColor(selectedColor)
 
-            tvCustomerTab.setTypeface(null, android.graphics.Typeface.NORMAL)
-            tvEnquiryTab.setTypeface(null, android.graphics.Typeface.BOLD)
+            binding.tvCustomerTab.setTypeface(
+                null,
+                android.graphics.Typeface.NORMAL
+            )
 
-            customerIndicator.setBackgroundColor(android.graphics.Color.TRANSPARENT)
-            enquiryIndicator.setBackgroundColor(selectedColor)
+            binding.tvEnquiryTab.setTypeface(
+                null,
+                android.graphics.Typeface.BOLD
+            )
+
+            binding.customerIndicator.setBackgroundColor(
+                android.graphics.Color.TRANSPARENT
+            )
+
+            binding.enquiryIndicator.setBackgroundColor(selectedColor)
         }
     }
 
@@ -247,7 +258,8 @@ class CreateSellingEnquiryActivity : AppCompatActivity() {
     }
 
     private fun getAuthToken(): String {
-        // Replace this with your existing PreferenceProvider token method.
+
+        // Replace with your existing PreferenceProvider token method.
         return getSharedPreferences("login", MODE_PRIVATE)
             .getString("token", "")
             .orEmpty()
@@ -304,6 +316,7 @@ class CreateSellingEnquiryActivity : AppCompatActivity() {
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
+
         if (currentStep == 2) {
             navigateToCustomer()
         } else {

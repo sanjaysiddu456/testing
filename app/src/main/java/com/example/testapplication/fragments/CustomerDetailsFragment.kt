@@ -1,3 +1,4 @@
+
 package com.example.testapplication.fragments
 
 import android.os.Bundle
@@ -5,14 +6,11 @@ import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.testapplication.activities.CreateSellingEnquiryActivity
-import com.example.testapplication.R
 import com.example.testapplication.adapters.CustomSpinnerAdapter
+import com.example.testapplication.databinding.FragmentCustomerDetailsBinding
 
 data class CustomerDetails(
     val mobile: String,
@@ -30,40 +28,31 @@ data class CustomerDetails(
 
 class CustomerDetailsFragment : Fragment() {
 
-    private lateinit var etMobile: EditText
-    private lateinit var etCustomerName: EditText
-    private lateinit var etEmail: EditText
-    private lateinit var etAddress: EditText
-    private lateinit var etPinCode: EditText
-    private lateinit var etWhatsapp: EditText
-
-    private lateinit var spCustomerType: Spinner
-    private lateinit var spGender: Spinner
-    private lateinit var spState: Spinner
-    private lateinit var spDistrict: Spinner
-    private lateinit var spCity: Spinner
-
-    private lateinit var btnContinue: Button
+    private var _binding: FragmentCustomerDetailsBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(
-            R.layout.fragment_customer_details,
+
+        _binding = FragmentCustomerDetailsBinding.inflate(
+            inflater,
             container,
             false
         )
+
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initializeViews(view)
         setupSpinners()
 
-        btnContinue.setOnClickListener {
+        binding.btnContinue.setOnClickListener {
+
             val customer = validateAndGetData()
 
             if (customer != null) {
@@ -73,28 +62,10 @@ class CustomerDetailsFragment : Fragment() {
         }
     }
 
-    private fun initializeViews(view: View) {
-
-        etMobile = view.findViewById(R.id.etMobile)
-        etCustomerName = view.findViewById(R.id.etCustomerName)
-        etEmail = view.findViewById(R.id.etEmail)
-        etAddress = view.findViewById(R.id.etAddress)
-        etPinCode = view.findViewById(R.id.etPinCode)
-        etWhatsapp = view.findViewById(R.id.etWhatsapp)
-
-        spCustomerType = view.findViewById(R.id.spCustomerType)
-        spGender = view.findViewById(R.id.spGender)
-        spState = view.findViewById(R.id.spState)
-        spDistrict = view.findViewById(R.id.spDistrict)
-        spCity = view.findViewById(R.id.spCity)
-
-        btnContinue = view.findViewById(R.id.btnContinue)
-    }
-
     private fun setupSpinners() {
 
         setSpinner(
-            spCustomerType,
+            binding.spCustomerType,
             listOf(
                 "Select Customer Type",
                 "Individual",
@@ -104,7 +75,7 @@ class CustomerDetailsFragment : Fragment() {
         )
 
         setSpinner(
-            spGender,
+            binding.spGender,
             listOf(
                 "Select Gender",
                 "Male",
@@ -114,7 +85,7 @@ class CustomerDetailsFragment : Fragment() {
         )
 
         setSpinner(
-            spState,
+            binding.spState,
             listOf(
                 "Select State",
                 "Karnataka",
@@ -125,7 +96,7 @@ class CustomerDetailsFragment : Fragment() {
         )
 
         setSpinner(
-            spDistrict,
+            binding.spDistrict,
             listOf(
                 "Select District",
                 "Bengaluru Urban",
@@ -136,7 +107,7 @@ class CustomerDetailsFragment : Fragment() {
         )
 
         setSpinner(
-            spCity,
+            binding.spCity,
             listOf(
                 "Select City",
                 "Bengaluru",
@@ -148,95 +119,98 @@ class CustomerDetailsFragment : Fragment() {
     }
 
     private fun setSpinner(
-        spinner: Spinner,
+        spinner: android.widget.Spinner,
         values: List<String>
     ) {
         spinner.adapter = CustomSpinnerAdapter(
             requireContext(),
             values
         )
+
         spinner.setSelection(0)
     }
 
     fun validateAndGetData(): CustomerDetails? {
 
-        val mobile = etMobile.text.toString().trim()
-        val name = etCustomerName.text.toString().trim()
-        val email = etEmail.text.toString().trim()
-        val address = etAddress.text.toString().trim()
-        val pinCode = etPinCode.text.toString().trim()
-        val whatsapp = etWhatsapp.text.toString().trim()
+        val mobile = binding.etMobile.text.toString().trim()
+        val name = binding.etCustomerName.text.toString().trim()
+        val email = binding.etEmail.text.toString().trim()
+        val address = binding.etAddress.text.toString().trim()
+        val pinCode = binding.etPinCode.text.toString().trim()
+        val whatsapp = binding.etWhatsapp.text.toString().trim()
 
         if (mobile.length != 10) {
-            etMobile.error = "Enter valid 10 digit mobile number"
-            etMobile.requestFocus()
+            binding.etMobile.error = "Enter valid 10 digit mobile number"
+            binding.etMobile.requestFocus()
             return null
         }
 
         if (name.isEmpty()) {
-            etCustomerName.error = "Enter customer name"
-            etCustomerName.requestFocus()
+            binding.etCustomerName.error = "Enter customer name"
+            binding.etCustomerName.requestFocus()
             return null
         }
 
-        if (spCustomerType.selectedItemPosition == 0) {
+        if (binding.spCustomerType.selectedItemPosition == 0) {
             showMessage("Select customer type")
             return null
         }
 
-        if (spGender.selectedItemPosition == 0) {
+        if (binding.spGender.selectedItemPosition == 0) {
             showMessage("Select gender")
             return null
         }
 
-        if (email.isNotEmpty() && !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            etEmail.error = "Enter valid email"
-            etEmail.requestFocus()
+        if (email.isNotEmpty() &&
+            !Patterns.EMAIL_ADDRESS.matcher(email).matches()
+        ) {
+            binding.etEmail.error = "Enter valid email"
+            binding.etEmail.requestFocus()
             return null
         }
 
-        if (spState.selectedItemPosition == 0) {
+        if (binding.spState.selectedItemPosition == 0) {
             showMessage("Select state")
             return null
         }
 
-        if (spDistrict.selectedItemPosition == 0) {
+        if (binding.spDistrict.selectedItemPosition == 0) {
             showMessage("Select district")
             return null
         }
 
-        if (spCity.selectedItemPosition == 0) {
+        if (binding.spCity.selectedItemPosition == 0) {
             showMessage("Select city")
             return null
         }
 
         if (address.isEmpty()) {
-            etAddress.error = "Enter address"
-            etAddress.requestFocus()
+            binding.etAddress.error = "Enter address"
+            binding.etAddress.requestFocus()
             return null
         }
 
         if (pinCode.isNotEmpty() && pinCode.length != 6) {
-            etPinCode.error = "Enter valid pincode"
-            etPinCode.requestFocus()
+            binding.etPinCode.error = "Enter valid pincode"
+            binding.etPinCode.requestFocus()
             return null
         }
 
         if (whatsapp.isNotEmpty() && whatsapp.length != 10) {
-            etWhatsapp.error = "Enter valid WhatsApp number"
-            etWhatsapp.requestFocus()
+            binding.etWhatsapp.error = "Enter valid WhatsApp number"
+            binding.etWhatsapp.requestFocus()
             return null
         }
 
         return CustomerDetails(
             mobile = mobile,
             customerName = name,
-            customerType = spCustomerType.selectedItem.toString(),
-            gender = spGender.selectedItem.toString(),
+            customerType = binding.spCustomerType.selectedItem.toString(),
+            gender = binding.spGender.selectedItem.toString(),
             email = email,
-            state = spState.selectedItem.toString(),
-            district = spDistrict.selectedItem.toString(),
-            city = spCity.selectedItem.toString(),
+            state = binding.spState.selectedItem.toString(),
+            district = binding.spDistrict.selectedItem.toString(),
+            city = binding.spCity.selectedItem.toString(),
             address = address,
             pinCode = pinCode,
             whatsappNo = whatsapp
@@ -249,5 +223,10 @@ class CustomerDetailsFragment : Fragment() {
             message,
             Toast.LENGTH_SHORT
         ).show()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

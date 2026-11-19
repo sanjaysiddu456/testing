@@ -1,0 +1,36 @@
+{
+  "status": true,
+  "message": "Team follow-ups fetched successfully",
+  "data": [
+    {
+      "id": 1,
+      "consultantName": "Anujkumar",
+      "callBacks": 16,
+      "showroomVisit": 14
+    },
+    {
+      "id": 2,
+      "consultantName": "Anilkumar",
+      "callBacks": 15,
+      "showroomVisit": 6
+    },
+    {
+      "id": 3,
+      "consultantName": "Priyanka",
+      "callBacks": 11,
+      "showroomVisit": 8
+    },
+    {
+      "id": 4,
+      "consultantName": "Rajanedu",
+      "callBacks": 8,
+      "showroomVisit": 4
+    },
+    {
+      "id": 5,
+      "consultantName": "Keerti",
+      "callBacks": 5,
+      "showroomVisit": 6
+    }
+  ]
+}

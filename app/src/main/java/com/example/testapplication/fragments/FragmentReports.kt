@@ -1,3 +1,4 @@
+
 package com.example.testapplication.fragments
 
 import android.graphics.Color
@@ -12,13 +13,13 @@ import com.example.testapplication.adapters.LeaderboardAdapter
 import com.example.testapplication.databinding.FragmentReportsBinding
 import com.example.testapplication.datamodels.ReportsData
 import com.example.testapplication.utils.ApiStatus
+
 import com.example.testapplication.viewmodels.ReportsViewModel
 import com.example.testapplication.viewmodels.ReportsViewModelFactory
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-
 
 class FragmentReports : Fragment(R.layout.fragment_reports) {
 
@@ -33,6 +34,8 @@ class FragmentReports : Fragment(R.layout.fragment_reports) {
         )
     }
 
+    private var isManager = false
+
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?
@@ -45,10 +48,39 @@ class FragmentReports : Fragment(R.layout.fragment_reports) {
 
         setupPieChart()
 
+        // Get logged-in user type
+        isManager = getUserType() == LoginUsers.H_PROMISE_MANAGER
+
+        // Set initial visibility
+        binding.layoutLeaderboard.visibility =
+            if (isManager) View.VISIBLE else View.GONE
+
         observeReports()
 
-        // Load dummy JSON response
+        // Observe leaderboard only for manager
+        if (isManager) {
+            observeLeaderboard()
+        }
+
+        // Reports API is called for all users
         viewModel.getReports()
+
+        // Leaderboard API is called only for H Promise Manager
+        if (isManager) {
+            viewModel.getLeaderboard()
+        }
+    }
+
+    // ==========================================
+    // GET USER TYPE
+    // ==========================================
+
+    private fun getUserType(): String {
+
+        return GlobalSharedPreference.getSharedPreference(
+            "login",
+            requireActivity()
+        ).getString("user", "").orEmpty()
     }
 
     // ==========================================
@@ -93,8 +125,6 @@ class FragmentReports : Fragment(R.layout.fragment_reports) {
 
             isHighlightPerTapEnabled = false
 
-            // Doughnut appearance
-
             isDrawHoleEnabled = true
 
             holeRadius = 65f
@@ -130,10 +160,7 @@ class FragmentReports : Fragment(R.layout.fragment_reports) {
 
         if (enquiredCount > 0) {
             entries.add(
-                PieEntry(
-                    enquiredCount.toFloat(),
-                    "Enquired"
-                )
+                PieEntry(enquiredCount.toFloat(), "Enquired")
             )
         }
 
@@ -159,13 +186,7 @@ class FragmentReports : Fragment(R.layout.fragment_reports) {
             return
         }
 
-        val dataSet = PieDataSet(
-            entries,
-            ""
-        ).apply {
-
-            // Blue = Enquired
-            // Green = Invoice Confirmed
+        val dataSet = PieDataSet(entries, "").apply {
 
             colors = listOf(
                 Color.rgb(0, 169, 199),
@@ -185,29 +206,22 @@ class FragmentReports : Fragment(R.layout.fragment_reports) {
 
             data = pieData
 
-            // Keep the chart without labels or legend.
-
             setDrawEntryLabels(false)
 
             legend.isEnabled = false
 
             description.isEnabled = false
 
-            // Start with blue segment at the top.
-
             rotationAngle = 270f
 
-            animateY(
-                900,
-                Easing.EaseInOutQuad
-            )
+            animateY(900, Easing.EaseInOutQuad)
 
             invalidate()
         }
     }
 
     // ==========================================
-    // OBSERVE REPORT RESPONSE
+    // OBSERVE REPORTS API
     // ==========================================
 
     private fun observeReports() {
@@ -217,8 +231,7 @@ class FragmentReports : Fragment(R.layout.fragment_reports) {
             when (resource.status) {
 
                 ApiStatus.Status.LOADING -> {
-
-                    // Show loader here if required.
+                    // Show reports loader if required.
                 }
 
                 ApiStatus.Status.SUCCESS -> {
@@ -241,8 +254,6 @@ class FragmentReports : Fragment(R.layout.fragment_reports) {
 
                 ApiStatus.Status.ERROR -> {
 
-                    binding.layoutLeaderboard.visibility = View.GONE
-
                     Toast.makeText(
                         requireContext(),
                         resource.message ?: "Unable to load reports",
@@ -261,51 +272,57 @@ class FragmentReports : Fragment(R.layout.fragment_reports) {
         reportData: ReportsData
     ) {
 
-        // Display counts
-
         binding.tvEnquiredCount.text =
             reportData.enquiredCount.toString()
 
         binding.tvInvoiceConfirmedCount.text =
             reportData.invoiceConfirmedCount.toString()
 
-        // Display doughnut chart
-
         updatePieChart(
             enquiredCount = reportData.enquiredCount,
             invoiceConfirmedCount = reportData.invoiceConfirmedCount
         )
-
-        // Update leaderboard data
-
-        leaderboardAdapter.submitList(
-            reportData.leaderboard
-        )
-
-        // ======================================
-        // ROLE-BASED LEADERBOARD VISIBILITY
-        // ======================================
-
-        // Temporary value for testing.
-        // Replace with your actual role condition.
-
-        val shouldShowLeaderboard = true
-
-        updateLeaderboardVisibility(
-            shouldShowLeaderboard
-        )
     }
 
     // ==========================================
-    // ROLE-BASED VISIBILITY
+    // OBSERVE LEADERBOARD API
     // ==========================================
 
-    private fun updateLeaderboardVisibility(
-        shouldShow: Boolean
-    ) {
+    private fun observeLeaderboard() {
 
-        binding.layoutLeaderboard.visibility =
-            if (shouldShow) View.VISIBLE else View.GONE
+        viewModel.leaderboardResponse.observe(viewLifecycleOwner) { resource ->
+
+            when (resource.status) {
+
+                ApiStatus.Status.LOADING -> {
+                    // Add leaderboard-specific loader if required.
+                }
+
+                ApiStatus.Status.SUCCESS -> {
+
+                    val leaderboard = resource.data?.data.orEmpty()
+
+                    leaderboardAdapter.submitList(leaderboard)
+
+                    binding.layoutLeaderboard.visibility =
+                        View.VISIBLE
+                }
+
+                ApiStatus.Status.ERROR -> {
+
+                    leaderboardAdapter.submitList(emptyList())
+
+                    binding.layoutLeaderboard.visibility =
+                        View.GONE
+
+                    Toast.makeText(
+                        requireContext(),
+                        resource.message ?: "Unable to load leaderboard",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
     }
 
     // ==========================================
@@ -313,6 +330,7 @@ class FragmentReports : Fragment(R.layout.fragment_reports) {
     // ==========================================
 
     override fun onDestroyView() {
+
         binding.pieChartSellingReport.clear()
 
         super.onDestroyView()

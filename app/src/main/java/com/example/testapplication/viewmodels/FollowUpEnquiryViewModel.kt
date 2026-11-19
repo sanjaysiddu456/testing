@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.testapplication.datamodels.CreateFollowUpResponse
+import com.example.testapplication.datamodels.FollowUpResponse
 import com.example.testapplication.datamodels.NewFollowUpRequest
-import com.example.testapplication.datamodels.responseGetFollowUps
 import com.example.testapplication.network.ApiProvider
 import com.example.testapplication.network.RepositoryApprik
 import com.example.testapplication.utils.ApiStatus
@@ -19,9 +19,9 @@ class FollowUpEnquiryViewModel(
 ) : ViewModel() {
 
     private val _followUpResponse =
-        MutableLiveData<ApiStatus.Resource<responseGetFollowUps>>()
+        MutableLiveData<ApiStatus.Resource<FollowUpResponse>>()
 
-    val followUpResponse: LiveData<ApiStatus.Resource<responseGetFollowUps>>
+    val followUpResponse: LiveData<ApiStatus.Resource<FollowUpResponse>>
         get() = _followUpResponse
 
 

@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.testapplication.datamodels.DashboardResponse
+import com.example.testapplication.datamodels.TeamFollowUpResponse
 import com.example.testapplication.network.ApiProvider
 import com.example.testapplication.network.RepositoryApprik
 import com.example.testapplication.utils.ApiStatus
@@ -20,11 +21,31 @@ class DashboardViewModel(
     private val repository: RepositoryApprik
 ) : ViewModel() {
 
+    // ==========================================
+    // DASHBOARD RESPONSE
+    // ==========================================
+
     private val _dashboardResponse =
         MutableLiveData<ApiStatus.Resource<DashboardResponse>>()
 
     val dashboardResponse: LiveData<ApiStatus.Resource<DashboardResponse>>
         get() = _dashboardResponse
+
+
+    // ==========================================
+    // TEAM FOLLOW-UPS RESPONSE
+    // ==========================================
+
+    private val _teamFollowUpResponse =
+        MutableLiveData<ApiStatus.Resource<TeamFollowUpResponse>>()
+
+    val teamFollowUpResponse: LiveData<ApiStatus.Resource<TeamFollowUpResponse>>
+        get() = _teamFollowUpResponse
+
+
+    // ==========================================
+    // GET DASHBOARD DETAILS
+    // ==========================================
 
     fun getDashboard() {
 
@@ -44,8 +65,7 @@ class DashboardViewModel(
 
                         _dashboardResponse.value =
                             ApiStatus.Resource.error(
-                                exception.message
-                                    ?: "Unable to load dashboard"
+                                exception.message ?: "Unable to load dashboard"
                             )
                     }
                     .collect { response ->
@@ -67,8 +87,56 @@ class DashboardViewModel(
             }
         }
     }
-}
 
+
+    // ==========================================
+    // GET TEAM FOLLOW-UPS
+    // ==========================================
+
+    fun getTeamFollowUps() {
+
+        viewModelScope.launch {
+
+            _teamFollowUpResponse.value =
+                ApiStatus.Resource.loading()
+
+            try {
+
+                repository.getTeamFollowUps()
+                    .catch { exception ->
+
+                        if (exception is CancellationException) {
+                            throw exception
+                        }
+
+                        _teamFollowUpResponse.value =
+                            ApiStatus.Resource.error(
+                                exception.message
+                                    ?: "Unable to load team follow-ups"
+                            )
+                    }
+                    .collect { response ->
+
+                        _teamFollowUpResponse.value =
+                            ApiStatus.Resource.success(response)
+                    }
+
+            } catch (exception: CancellationException) {
+
+                throw exception
+
+            } catch (exception: Exception) {
+
+                _teamFollowUpResponse.value =
+                    ApiStatus.Resource.error(
+                        exception.message
+                            ?: "Unable to load team follow-ups"
+                    )
+            }
+        }
+    }
+
+}
 
 
 class DashboardViewModelFactory(

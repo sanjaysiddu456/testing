@@ -3,11 +3,14 @@ package com.example.testapplication.network
 import android.content.Context
 import com.example.testapplication.datamodels.CreateFollowUpResponse
 import com.example.testapplication.datamodels.DashboardResponse
+import com.example.testapplication.datamodels.EnquiryDetailsResponse
+import com.example.testapplication.datamodels.FollowUpResponse
+import com.example.testapplication.datamodels.LeaderboardResponse
 import com.example.testapplication.datamodels.NewFollowUpRequest
 import com.example.testapplication.datamodels.ReportsResponse
 import com.example.testapplication.datamodels.StockResponse
+import com.example.testapplication.datamodels.TeamFollowUpResponse
 import com.example.testapplication.datamodels.responseGetEnquiries
-import com.example.testapplication.datamodels.responseGetFollowUps
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -54,51 +57,53 @@ class RepositoryApprik(
     }.flowOn(Dispatchers.IO)
 
 
-
-
-    suspend fun getFollowUps(
+    suspend fun getEnquiryDetails(
         enquiryId: Int,
         token: String
-    ): Flow<responseGetFollowUps> = flow {
+    ): Flow<EnquiryDetailsResponse> = flow {
 
-        // =================================
+        // =====================================
         // DUMMY JSON RESPONSE
-        // =================================
+        // =====================================
 
-        val json = context.assets.open("followups.json")
+        val json = context.assets
+            .open("enquiry_details.json")
             .bufferedReader()
             .use { it.readText() }
 
         val response = Gson().fromJson(
             json,
-            responseGetFollowUps::class.java
-        )
-
-        // Filter follow-ups for the selected enquiry
-        val filteredResponse = response.copy(
-            data = response.data
-                .filter { it.enquiryId == enquiryId }
-                .sortedByDescending { it.id }
-        )
-
-        emit(filteredResponse)
-
-
-        // =================================
-        // ACTUAL API RESPONSE
-        // Uncomment when backend is ready
-        // =================================
-
-        /*
-        val response = apiService.getFollowUps(
-            token = token,
-            enquiryId = enquiryId
+            EnquiryDetailsResponse::class.java
         )
 
         emit(response)
+
+        // =====================================
+        // ACTUAL API - ENABLE WHEN READY
+        // =====================================
+
+        /*
+        val apiResponse = ApiProvider.apiService.getEnquiryDetails(
+            enquiryId = enquiryId,
+            token = "Bearer $token"
+        )
+
+        if (apiResponse.isSuccessful && apiResponse.body() != null) {
+            emit(apiResponse.body()!!)
+        } else {
+            throw Exception(
+                apiResponse.errorBody()?.string()
+                    ?: apiResponse.message()
+            )
+        }
         */
 
     }.flowOn(Dispatchers.IO)
+
+
+
+
+
 
     suspend fun createFollowUp(
         request: NewFollowUpRequest
@@ -154,10 +159,6 @@ class RepositoryApprik(
 
     suspend fun getDashboard(): Flow<DashboardResponse> = flow {
 
-        // =====================================
-        // DUMMY JSON RESPONSE
-        // =====================================
-
         val json = context.assets.open("dashboard.json")
             .bufferedReader()
             .use { it.readText() }
@@ -169,9 +170,7 @@ class RepositoryApprik(
 
         emit(response)
 
-        // =====================================
-        // ACTUAL API CALL - UNCOMMENT LATER
-        // =====================================
+        // Actual API - enable when backend is ready
 
         /*
         val response = apiService.getDashboard()
@@ -186,11 +185,39 @@ class RepositoryApprik(
     }.flowOn(Dispatchers.IO)
 
 
-    suspend fun getReports(): Flow<ReportsResponse> = flow {
+    // ==========================================
+    // TEAM FOLLOW-UPS API
+    // ==========================================
 
-        // =====================================
-        // DUMMY JSON RESPONSE
-        // =====================================
+    suspend fun getTeamFollowUps(): Flow<TeamFollowUpResponse> = flow {
+
+        val json = context.assets.open("team_followups.json")
+            .bufferedReader()
+            .use { it.readText() }
+
+        val response = Gson().fromJson(
+            json,
+            TeamFollowUpResponse::class.java
+        )
+
+        emit(response)
+
+        // Actual API - enable when backend is ready
+
+        /*
+        val response = apiService.getTeamFollowUps()
+
+        if (response.isSuccessful && response.body() != null) {
+            emit(response.body()!!)
+        } else {
+            throw Exception(response.message())
+        }
+        */
+
+    }.flowOn(Dispatchers.IO)
+
+
+    suspend fun getReports(): Flow<ReportsResponse> = flow {
 
         val json = context.assets.open("reports.json")
             .bufferedReader()
@@ -203,9 +230,7 @@ class RepositoryApprik(
 
         emit(response)
 
-        // =====================================
-        // ACTUAL API CALL - ENABLE LATER
-        // =====================================
+        // Actual API - enable when backend is ready
 
         /*
         val response = apiService.getReports()
@@ -218,5 +243,70 @@ class RepositoryApprik(
         */
 
     }.flowOn(Dispatchers.IO)
+
+
+    // ==========================================
+    // LEADERBOARD API
+    // ==========================================
+
+    suspend fun getLeaderboard(): Flow<LeaderboardResponse> = flow {
+
+        val json = context.assets.open("leaderboard.json")
+            .bufferedReader()
+            .use { it.readText() }
+
+        val response = Gson().fromJson(
+            json,
+            LeaderboardResponse::class.java
+        )
+
+        emit(response)
+
+        // Actual API - enable when backend is ready
+
+        /*
+        val response = apiService.getLeaderboard()
+
+        if (response.isSuccessful && response.body() != null) {
+            emit(response.body()!!)
+        } else {
+            throw Exception(response.message())
+        }
+        */
+
+    }.flowOn(Dispatchers.IO)// ==========================================
+    // LEADERBOARD API
+    // ==========================================
+
+    suspend fun getFollowUps( enquiryId: Int,
+                              token: String): Flow<FollowUpResponse> = flow {
+
+        val json = context.assets.open("followups.json")
+            .bufferedReader()
+            .use { it.readText() }
+
+        val response = Gson().fromJson(
+            json,
+            FollowUpResponse::class.java
+        )
+
+        emit(response)
+
+        // Actual API - enable when backend is ready
+
+        /*
+        val response = apiService.getLeaderboard()
+
+        if (response.isSuccessful && response.body() != null) {
+            emit(response.body()!!)
+        } else {
+            throw Exception(response.message())
+        }
+        */
+
+    }.flowOn(Dispatchers.IO)
+
+
+
 
 }

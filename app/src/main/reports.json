@@ -1,41 +1,8 @@
-
 {
   "status": true,
   "message": "Reports fetched successfully",
   "data": {
     "enquiredCount": 200,
-    "invoiceConfirmedCount": 50,
-    "leaderboard": [
-      {
-        "id": 1,
-        "consultantName": "Anujkumar",
-        "followUps": 16,
-        "invoiceConfirmed": 14
-      },
-      {
-        "id": 2,
-        "consultantName": "Anilkumar",
-        "followUps": 15,
-        "invoiceConfirmed": 6
-      },
-      {
-        "id": 3,
-        "consultantName": "Priyanka",
-        "followUps": 11,
-        "invoiceConfirmed": 8
-      },
-      {
-        "id": 4,
-        "consultantName": "Rajanedu",
-        "followUps": 8,
-        "invoiceConfirmed": 4
-      },
-      {
-        "id": 5,
-        "consultantName": "Keerti",
-        "followUps": 5,
-        "invoiceConfirmed": 6
-      }
-    ]
+    "invoiceConfirmedCount": 50
   }
 }

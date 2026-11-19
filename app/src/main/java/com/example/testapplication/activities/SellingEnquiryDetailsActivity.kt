@@ -1,21 +1,22 @@
+
 package com.example.testapplication.enquiryFeature
 
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.testapplication.viewmodels.FollowUpEnquiryViewModel
+import com.example.testapplication.activities.NewFollowUpActivity
 import com.example.testapplication.adapter.FollowUpAdapter
 import com.example.testapplication.datamodels.Enquiry
 import com.example.testapplication.datamodels.FollowUp
 import com.example.testapplication.databinding.ActivitySellingEnquiryDetailsBinding
 import com.example.testapplication.utils.ApiStatus
+import com.example.testapplication.viewmodels.FollowUpEnquiryViewModel
 
 class SellingEnquiryDetailsActivity : AppCompatActivity() {
 
@@ -25,63 +26,149 @@ class SellingEnquiryDetailsActivity : AppCompatActivity() {
 
     private var enquiry: Enquiry? = null
 
+    private var enquiryId: Int = -1
+
+    private var isSalesConsultant = false
+    private var isManager = false
+
     private val token: String
         get() = intent.getStringExtra(EXTRA_TOKEN).orEmpty()
 
-    private val viewModel: FollowUpEnquiryViewModel by viewModels {
+    // Enquiry Details ViewModel
+    private val enquiryViewModel: EnquiryViewModel by viewModels {
+        EnquiryViewModelFactory(applicationContext)
+    }
+
+    // Follow-ups ViewModel
+    private val followUpViewModel: FollowUpEnquiryViewModel by viewModels {
         EnquiryViewModelFactory(applicationContext)
     }
 
     companion object {
 
-        const val EXTRA_ENQUIRY = "extra_enquiry"
+        const val EXTRA_ENQUIRY_ID = "extra_enquiry_id"
         const val EXTRA_TOKEN = "extra_token"
     }
 
-    @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivitySellingEnquiryDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        enquiry = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getSerializableExtra(EXTRA_ENQUIRY, Enquiry::class.java)
-        } else {
-            intent.getSerializableExtra(EXTRA_ENQUIRY) as? Enquiry
-        }
+        enquiryId = intent.getIntExtra(EXTRA_ENQUIRY_ID, -1)
 
-        if (enquiry == null) {
-            Toast.makeText(
-                this,
-                "Enquiry details not found",
-                Toast.LENGTH_SHORT
-            ).show()
+//        if (enquiryId == -1) {
+//
+//            Toast.makeText(
+//                this,
+//                "Enquiry ID not found",
+//                Toast.LENGTH_SHORT
+//            ).show()
+//
+//            finish()
+//            return
+//        }
 
-            finish()
-            return
-        }
-
-        displayEnquiryDetails()
+        getLoggedInUserType()
 
         setupFollowUpRecyclerView()
 
         setupClickListeners()
 
+        observeEnquiryDetails()
+
         observeFollowUps()
 
-        loadFollowUps()
+        // =====================================
+        // INDEPENDENT API CALLS
+        // =====================================
+
+        // Call 1: Enquiry details
+        enquiryViewModel.getEnquiryDetails(
+            enquiryId = enquiryId,
+            token = token
+        )
+
+        // Call 2: Follow-ups
+        followUpViewModel.getFollowUps(
+            enquiryId = enquiryId,
+            token = token
+        )
     }
 
     // ==========================================
-    // DISPLAY CUSTOMER AND ENQUIRY DETAILS
+    // USER ROLE
     // ==========================================
 
-    private fun displayEnquiryDetails() {
+    private fun getLoggedInUserType() {
 
-        val item = enquiry ?: return
+        val userType = GlobalSharedPreference.getSharedPreference(
+            "login",
+            this
+        ).getString("user", "").orEmpty()
 
-        // Customer details
+        isSalesConsultant =
+            userType == LoginUsers.SALES_CONSULTANT
+
+        isManager =
+            userType == LoginUsers.H_PROMISE_MANAGER
+    }
+
+    // ==========================================
+    // OBSERVE ENQUIRY DETAILS API
+    // ==========================================
+
+    private fun observeEnquiryDetails() {
+
+        enquiryViewModel.enquiryDetailsResponse.observe(this) { resource ->
+
+            when (resource.status) {
+
+                ApiStatus.Status.LOADING -> {
+
+                    // Show enquiry details loader if available.
+                }
+
+                ApiStatus.Status.SUCCESS -> {
+
+                    val details = resource.data?.data
+
+                    if (details == null) {
+
+                        Toast.makeText(
+                            this,
+                            "Enquiry details not available",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                        return@observe
+                    }
+
+                    enquiry = details
+
+                    displayEnquiryDetails(details)
+
+                    updateEnquiryStatusUI()
+                }
+
+                ApiStatus.Status.ERROR -> {
+
+                    Toast.makeText(
+                        this,
+                        resource.message ?: "Unable to load enquiry details",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+    }
+
+    // ==========================================
+    // DISPLAY ENQUIRY DETAILS
+    // ==========================================
+
+    private fun displayEnquiryDetails(item: Enquiry) {
 
         binding.tvCustomerName.text = item.customerName
 
@@ -100,14 +187,10 @@ class SellingEnquiryDetailsActivity : AppCompatActivity() {
 
         binding.tvEmail.text = item.email
 
-        // Callback information
-
         binding.tvCallBackIn.text = item.callBackIn
 
         binding.tvCallBackDateTime.text =
             "${item.callBackDate}, ${item.callBackTime}"
-
-        // Enquiry information
 
         binding.rowEnquiryNo.tvDetailLabel.text = "Enquiry No"
         binding.rowEnquiryNo.tvDetailValue.text = item.enquiryNo
@@ -120,8 +203,6 @@ class SellingEnquiryDetailsActivity : AppCompatActivity() {
 
         binding.rowEnquirySource.tvDetailLabel.text = "Enquiry Source"
         binding.rowEnquirySource.tvDetailValue.text = item.enquirySource
-
-        // Vehicle information
 
         binding.rowRegName.tvDetailLabel.text = "Reg. Name"
         binding.rowRegName.tvDetailValue.text = item.regName
@@ -137,14 +218,10 @@ class SellingEnquiryDetailsActivity : AppCompatActivity() {
 
         binding.rowCar.tvDetailLabel.text = "Car"
         binding.rowCar.tvDetailValue.text = item.carName
-
-        // Open or closed enquiry UI
-
-        updateEnquiryStatusUI()
     }
 
     // ==========================================
-    // OPEN / CLOSED ENQUIRY VISIBILITY
+    // OPEN / CLOSED ENQUIRY UI
     // ==========================================
 
     private fun updateEnquiryStatusUI() {
@@ -153,38 +230,25 @@ class SellingEnquiryDetailsActivity : AppCompatActivity() {
 
         if (item.isClosed) {
 
-            // CLOSED ENQUIRY
-
             binding.tvEnquiryClosedBanner.visibility = View.VISIBLE
 
             binding.tvEnquiryClosedBanner.text =
                 "Enquiry closed on ${item.closedDateTime}"
 
-            // Hide Call Customer and Close Enquiry
-
             binding.layoutEnquiryActions.visibility = View.GONE
-
-            // Hide New Follow-up
-
-            binding.tvNewFollowUp.visibility = View.GONE
-
-            // Hide Create Follow-up button
-
-            binding.btnCreateFollowUp.visibility = View.GONE
 
         } else {
 
-            // OPEN ENQUIRY
-
             binding.tvEnquiryClosedBanner.visibility = View.GONE
 
-            // Show Call Customer and Close Enquiry
-
             binding.layoutEnquiryActions.visibility = View.VISIBLE
-
-            // Follow-up button visibility is handled
-            // after receiving the follow-up response.
         }
+
+        // Reapply role and enquiry status rules
+        // after enquiry details are received.
+        updateFollowUpActionVisibility(
+            hasFollowUps = followUpAdapter.itemCount > 0
+        )
     }
 
     // ==========================================
@@ -208,32 +272,18 @@ class SellingEnquiryDetailsActivity : AppCompatActivity() {
     }
 
     // ==========================================
-    // GET FOLLOW-UP DATA
-    // ==========================================
-
-    private fun loadFollowUps() {
-
-        val selectedEnquiry = enquiry ?: return
-
-        viewModel.getFollowUps(
-            enquiryId = selectedEnquiry.id,
-            token = token
-        )
-    }
-
-    // ==========================================
-    // OBSERVE FOLLOW-UP RESPONSE
+    // OBSERVE FOLLOW-UPS API
     // ==========================================
 
     private fun observeFollowUps() {
 
-        viewModel.followUpResponse.observe(this) { resource ->
+        followUpViewModel.followUpResponse.observe(this) { resource ->
 
             when (resource.status) {
 
                 ApiStatus.Status.LOADING -> {
 
-                    hideAllFollowUpViews()
+                    hideFollowUpContent()
 
                     binding.progressFollowUps.visibility = View.VISIBLE
                 }
@@ -246,53 +296,33 @@ class SellingEnquiryDetailsActivity : AppCompatActivity() {
 
                     if (followUps.isNotEmpty()) {
 
-                        // Follow-ups available
-
                         binding.layoutNoFollowUps.visibility = View.GONE
-
                         binding.layoutFollowUpError.visibility = View.GONE
-
                         binding.rvFollowUps.visibility = View.VISIBLE
-
-                        // New Follow-up only for OPEN enquiries
-
-                        binding.tvNewFollowUp.visibility =
-                            if (enquiry?.isClosed == false) {
-                                View.VISIBLE
-                            } else {
-                                View.GONE
-                            }
 
                         followUpAdapter.submitList(followUps)
 
+                        updateFollowUpActionVisibility(
+                            hasFollowUps = true
+                        )
+
                     } else {
 
-                        // No follow-ups available
-
                         binding.rvFollowUps.visibility = View.GONE
-
                         binding.layoutFollowUpError.visibility = View.GONE
-
                         binding.layoutNoFollowUps.visibility = View.VISIBLE
 
-                        // Create button only for OPEN enquiries
-
-                        binding.btnCreateFollowUp.visibility =
-                            if (enquiry?.isClosed == false) {
-                                View.VISIBLE
-                            } else {
-                                View.GONE
-                            }
-
-                        binding.tvNewFollowUp.visibility = View.GONE
-
                         followUpAdapter.submitList(emptyList<FollowUp>())
+
+                        updateFollowUpActionVisibility(
+                            hasFollowUps = false
+                        )
                     }
                 }
 
                 ApiStatus.Status.ERROR -> {
 
-                    hideAllFollowUpViews()
+                    hideFollowUpContent()
 
                     binding.layoutFollowUpError.visibility = View.VISIBLE
 
@@ -303,17 +333,51 @@ class SellingEnquiryDetailsActivity : AppCompatActivity() {
         }
     }
 
-    private fun hideAllFollowUpViews() {
+    // ==========================================
+    // ROLE-BASED FOLLOW-UP ACTIONS
+    // ==========================================
+
+    private fun updateFollowUpActionVisibility(
+        hasFollowUps: Boolean
+    ) {
+
+        val isOpen = enquiry?.isClosed == false
+
+        // Manager and other roles cannot create follow-ups.
+        if (!isSalesConsultant || isManager || !isOpen) {
+
+            binding.tvNewFollowUp.visibility = View.GONE
+            binding.btnCreateFollowUp.visibility = View.GONE
+
+            return
+        }
+
+        // Sales Consultant only
+        if (hasFollowUps) {
+
+            binding.tvNewFollowUp.visibility = View.VISIBLE
+            binding.btnCreateFollowUp.visibility = View.GONE
+
+        } else {
+
+            binding.tvNewFollowUp.visibility = View.GONE
+            binding.btnCreateFollowUp.visibility = View.VISIBLE
+        }
+    }
+
+    // ==========================================
+    // HIDE FOLLOW-UP CONTENT
+    // ==========================================
+
+    private fun hideFollowUpContent() {
 
         binding.progressFollowUps.visibility = View.GONE
-
         binding.layoutNoFollowUps.visibility = View.GONE
-
         binding.rvFollowUps.visibility = View.GONE
-
         binding.layoutFollowUpError.visibility = View.GONE
 
         binding.tvNewFollowUp.visibility = View.GONE
+        binding.btnCreateFollowUp.visibility = View.GONE
     }
 
     // ==========================================
@@ -322,20 +386,18 @@ class SellingEnquiryDetailsActivity : AppCompatActivity() {
 
     private fun setupClickListeners() {
 
-        // Call Customer
-
         binding.btnCallCustomer.setOnClickListener {
 
             val mobileNumber = enquiry?.mobileNumber.orEmpty()
 
             if (mobileNumber.isNotBlank()) {
 
-                val dialIntent = Intent(
-                    Intent.ACTION_DIAL,
-                    Uri.parse("tel:$mobileNumber")
+                startActivity(
+                    Intent(
+                        Intent.ACTION_DIAL,
+                        Uri.parse("tel:$mobileNumber")
+                    )
                 )
-
-                startActivity(dialIntent)
 
             } else {
 
@@ -347,32 +409,31 @@ class SellingEnquiryDetailsActivity : AppCompatActivity() {
             }
         }
 
-        // Close Enquiry
-
         binding.btnCloseEnquiry.setOnClickListener {
 
             showCloseEnquiryDialog()
         }
 
-        // Create Follow-up from empty state
-
         binding.btnCreateFollowUp.setOnClickListener {
 
-            openCreateFollowUp()
+            if (isSalesConsultant && !isManager) {
+                openCreateFollowUp()
+            }
         }
-
-        // New Follow-up when records exist
 
         binding.tvNewFollowUp.setOnClickListener {
 
-            openCreateFollowUp()
+            if (isSalesConsultant && !isManager) {
+                openCreateFollowUp()
+            }
         }
-
-        // Retry follow-up request
 
         binding.btnRetryFollowUps.setOnClickListener {
 
-            loadFollowUps()
+            followUpViewModel.getFollowUps(
+                enquiryId = enquiryId,
+                token = token
+            )
         }
     }
 
@@ -382,25 +443,8 @@ class SellingEnquiryDetailsActivity : AppCompatActivity() {
 
     private fun showCloseEnquiryDialog() {
 
-//        AlertDialog.Builder(this)
-//            .setTitle("Close Enquiry")
-//            .setMessage("Are you sure you want to close this enquiry?")
-//            .setPositiveButton("Yes") { dialog, _ ->
-//
-//                // TODO:
-//                // Call your Close Enquiry API here.
-//                // Update isClosed only after successful API response.
-//
-//                Toast.makeText(
-//                    this,
-//                    "Close Enquiry API is not connected yet",
-//                    Toast.LENGTH_SHORT
-//                ).show()
-//
-//                dialog.dismiss()
-//            }
-//            .setNegativeButton("Cancel", null)
-//            .show()
+        // Keep your existing Close Enquiry dialog
+        // and API implementation here.
     }
 
     // ==========================================
@@ -409,20 +453,20 @@ class SellingEnquiryDetailsActivity : AppCompatActivity() {
 
     private fun openCreateFollowUp() {
 
+        if (!isSalesConsultant || isManager) return
+
         val selectedEnquiry = enquiry ?: return
 
-        if (selectedEnquiry.isClosed) {
-            return
-        }
+        if (selectedEnquiry.isClosed) return
 
-        // TODO:
-        // Open your Create Follow-up Activity or BottomSheet.
-        // Pass selectedEnquiry.id to it.
 
-        Toast.makeText(
-            this,
-            "Create Follow-up for enquiry ${selectedEnquiry.id}",
-            Toast.LENGTH_SHORT
-        ).show()
+
+         val intent = Intent(
+             this,
+             NewFollowUpActivity::class.java
+         )
+
+         intent.putExtra("ENQUIRY_ID", selectedEnquiry.id)
+         startActivity(intent)
     }
 }

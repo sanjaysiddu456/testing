@@ -1,0 +1,36 @@
+{
+  "status": true,
+  "message": "Leaderboard fetched successfully",
+  "data": [
+    {
+      "id": 1,
+      "consultantName": "Anujkumar",
+      "followUps": 16,
+      "invoiceConfirmed": 14
+    },
+    {
+      "id": 2,
+      "consultantName": "Anilkumar",
+      "followUps": 15,
+      "invoiceConfirmed": 6
+    },
+    {
+      "id": 3,
+      "consultantName": "Priyanka",
+      "followUps": 11,
+      "invoiceConfirmed": 8
+    },
+    {
+      "id": 4,
+      "consultantName": "Rajanedu",
+      "followUps": 8,
+      "invoiceConfirmed": 4
+    },
+    {
+      "id": 5,
+      "consultantName": "Keerti",
+      "followUps": 5,
+      "invoiceConfirmed": 6
+    }
+  ]
+}

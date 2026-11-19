@@ -1,43 +1,10 @@
-
 {
   "status": true,
-  "message": "Dashboard data fetched successfully",
+  "message": "Dashboard fetched successfully",
   "data": {
-    "consultantName": "Rajesh Kulkarni",
+    "consultantName": "Anil Kumar Choudhari",
     "totalFollowUps": 120,
     "callBackCount": 32,
-    "dealerVisitCount": 81,
-    "teamFollowUps": [
-      {
-        "id": 1,
-        "consultantName": "Anujkumar",
-        "callBacks": 16,
-        "showroomVisits": 14
-      },
-      {
-        "id": 2,
-        "consultantName": "Anilkumar",
-        "callBacks": 15,
-        "showroomVisits": 6
-      },
-      {
-        "id": 3,
-        "consultantName": "Priyanka",
-        "callBacks": 11,
-        "showroomVisits": 8
-      },
-      {
-        "id": 4,
-        "consultantName": "Rajanedu",
-        "callBacks": 8,
-        "showroomVisits": 4
-      },
-      {
-        "id": 5,
-        "consultantName": "Keerti",
-        "callBacks": 5,
-        "showroomVisits": 6
-      }
-    ]
+    "dealerVisitCount": 81
   }
 }

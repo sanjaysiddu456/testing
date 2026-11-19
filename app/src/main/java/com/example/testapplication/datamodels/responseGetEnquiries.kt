@@ -8,24 +8,3 @@ data class responseGetEnquiries(val status: Boolean,
                                 val data: List<Enquiry>)
 
 
-data class Enquiry(
-    val id: Int,
-    val customerName: String,
-    val mobileNumber: String,
-    val email: String = "",
-    val isCertified: Boolean = false,
-    val regName: String = "",
-    val regNo: String = "",
-    val maker: String = "",
-    val model: String = "",
-    val carName: String = "",
-    val callBackIn: String = "",
-    val callBackDate: String = "",
-    val callBackTime: String = "",
-    val isClosed: Boolean = false,
-    val closedDateTime: String = "",
-    val enquiryNo: String = "",
-    val dateOfEnquiry: String = "",
-    val timeOfEnquiry: String = "",
-    val enquirySource: String = ""
-) : Serializable

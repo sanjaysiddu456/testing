@@ -1,10 +1,8 @@
 package com.example.testapplication.datamodels
 
-
 import java.io.Serializable
 
-
-data class responseGetFollowUps(
+data class FollowUpResponse(
     val status: Boolean,
     val message: String,
     val data: List<FollowUp>

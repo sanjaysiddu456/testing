@@ -1,0 +1,25 @@
+{
+  "status": true,
+  "message": "Enquiry details fetched successfully",
+  "data": {
+    "id": 101,
+    "customerName": "Rajesh Kumar",
+    "isCertified": true,
+    "mobileNumber": "9876543210",
+    "email": "rajesh@gmail.com",
+    "callBackIn": "Tomorrow",
+    "callBackDate": "20 Nov 2026",
+    "callBackTime": "11:30 AM",
+    "enquiryNo": "ENQ-00101",
+    "dateOfEnquiry": "18 Nov 2026",
+    "timeOfEnquiry": "10:30 AM",
+    "enquirySource": "Website",
+    "regName": "Rajesh Kumar",
+    "regNo": "KA01AB1234",
+    "maker": "Hyundai",
+    "model": "Creta",
+    "carName": "Creta",
+    "isClosed": false,
+    "closedDateTime": ""
+  }
+}

@@ -1,3 +1,4 @@
+
 package com.example.testapplication.fragments
 
 import android.content.Intent
@@ -10,6 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.testapplication.R
 import com.example.testapplication.adapters.TeamFollowUpAdapter
 import com.example.testapplication.databinding.FragmentDashboardBinding
+import com.example.testapplication.datamodels.DashboardData
+import com.example.testapplication.datamodels.TeamFollowUpItem
 import com.example.testapplication.utils.ApiStatus
 import com.example.testapplication.viewmodels.DashboardViewModel
 import com.example.testapplication.viewmodels.DashboardViewModelFactory
@@ -27,6 +30,8 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         )
     }
 
+    private var isManager = false
+
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?
@@ -35,40 +40,70 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
         _binding = FragmentDashboardBinding.bind(view)
 
+        // Read logged-in user type
+        isManager = getUserType() == LoginUsers.H_PROMISE_MANAGER
+
         setupTeamFollowUpRecyclerView()
 
         setupClickListeners()
 
+        // Observe general dashboard API
         observeDashboardResponse()
 
-        // Load dashboard data from dummy JSON
+        // Observe team API only for manager
+        if (isManager) {
+            observeTeamFollowUpResponse()
+        }
+
+        // Dashboard details API is called for all users
         viewModel.getDashboard()
+
+        // Team Follow-ups API only for H Promise Manager
+        if (isManager) {
+            viewModel.getTeamFollowUps()
+        }
+
+        // Set role-based visibility immediately
+        updateDashboardSections()
     }
 
-    // ==================================================
+    // ==========================================
+    // GET USER TYPE
+    // ==========================================
+
+    private fun getUserType(): String {
+
+        return GlobalSharedPreference.getSharedPreference(
+            "login",
+            requireActivity()
+        ).getString("user", "").orEmpty()
+    }
+
+    // ==========================================
     // TEAM FOLLOW-UP RECYCLER VIEW
-    // ==================================================
+    // ==========================================
 
     private fun setupTeamFollowUpRecyclerView() {
 
         teamFollowUpAdapter = TeamFollowUpAdapter { selectedConsultant ->
 
-//            val intent = Intent(
-//                requireContext(),
-//                TeamFollowUpActivity::class.java
-//            )
-//
-//            intent.putExtra(
-//                "CONSULTANT_ID",
-//                selectedConsultant.id
-//            )
-//
-//            intent.putExtra(
-//                "CONSULTANT_NAME",
-//                selectedConsultant.consultantName
-//            )
-//
-//            startActivity(intent)
+            // Add TeamFollowUpActivity navigation here when ready.
+
+            /*
+            val intent = Intent(
+                requireContext(),
+                TeamFollowUpActivity::class.java
+            )
+
+            intent.putExtra("CONSULTANT_ID", selectedConsultant.id)
+
+            intent.putExtra(
+                "CONSULTANT_NAME",
+                selectedConsultant.consultantName
+            )
+
+            startActivity(intent)
+            */
         }
 
         binding.rvTeamFollowUps.apply {
@@ -83,28 +118,30 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         }
     }
 
-    // ==================================================
+    // ==========================================
     // CLICK LISTENERS
-    // ==================================================
+    // ==========================================
 
     private fun setupClickListeners() {
 
-        // Selling Enquiry List navigation
-
         binding.cardSellingEnquiry.setOnClickListener {
 
-//            val intent = Intent(
-//                requireContext(),
-//                SellingEnquiryListActivity::class.java
-//            )
-//
-//            startActivity(intent)
+            // Add SellingEnquiryListActivity navigation here.
+
+            /*
+            val intent = Intent(
+                requireContext(),
+                SellingEnquiryListActivity::class.java
+            )
+
+            startActivity(intent)
+            */
         }
     }
 
-    // ==================================================
-    // OBSERVE DASHBOARD RESPONSE
-    // ==================================================
+    // ==========================================
+    // OBSERVE DASHBOARD DETAILS API
+    // ==========================================
 
     private fun observeDashboardResponse() {
 
@@ -113,9 +150,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
             when (resource.status) {
 
                 ApiStatus.Status.LOADING -> {
-
-                    // Add dashboard progress indicator if required.
-
+                    // Dashboard details loading.
                 }
 
                 ApiStatus.Status.SUCCESS -> {
@@ -138,10 +173,6 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
                 ApiStatus.Status.ERROR -> {
 
-                    binding.layoutTeamFollowUps.visibility = View.GONE
-
-                    binding.cardSellingEnquiry.visibility = View.GONE
-
                     Toast.makeText(
                         requireContext(),
                         resource.message ?: "Unable to load dashboard",
@@ -152,87 +183,115 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         }
     }
 
-    // ==================================================
-    // DISPLAY DASHBOARD DATA
-    // ==================================================
+    // ==========================================
+    // DISPLAY DASHBOARD DETAILS
+    // ==========================================
 
     private fun displayDashboardData(
-        dashboard: com.example.testapplication.datamodels.DashboardData
+        dashboard: DashboardData
     ) {
-
-        // Consultant name
 
         binding.tvConsultantName.text =
             dashboard.consultantName
 
-        // Total Follow-ups
-
         binding.tvTotalFollowUps.text =
             dashboard.totalFollowUps.toString()
-
-        // Call Back count
 
         binding.tvCallBackCount.text =
             String.format("%03d", dashboard.callBackCount)
 
-        // Dealer Visit count
-
         binding.tvDealerVisitCount.text =
             String.format("%03d", dashboard.dealerVisitCount)
-
-        // Team Follow-ups list
-
-        teamFollowUpAdapter.submitList(
-            dashboard.teamFollowUps
-        )
-
-        // ==================================================
-        // ROLE-BASED VISIBILITY
-        // ==================================================
-
-        /*
-         * Temporary values for testing.
-         *
-         * Later replace these with your actual role conditions.
-         *
-         * Team Follow-ups and Selling Enquiry List
-         * must never be visible together.
-         */
-
-        val showTeamFollowUps = true
-        val showSellingEnquiry = false
-
-        updateDashboardSections(
-            showTeamFollowUps = showTeamFollowUps,
-            showSellingEnquiry = showSellingEnquiry
-        )
     }
 
-    // ==================================================
-    // SHOW / HIDE DASHBOARD SECTIONS
-    // ==================================================
+    // ==========================================
+    // OBSERVE TEAM FOLLOW-UPS API
+    // ==========================================
 
-    private fun updateDashboardSections(
-        showTeamFollowUps: Boolean,
-        showSellingEnquiry: Boolean
+    private fun observeTeamFollowUpResponse() {
+
+        viewModel.teamFollowUpResponse.observe(viewLifecycleOwner) { resource ->
+
+            when (resource.status) {
+
+                ApiStatus.Status.LOADING -> {
+                    // Add team follow-ups loader if required.
+                }
+
+                ApiStatus.Status.SUCCESS -> {
+
+                    val teamFollowUps = resource.data?.data.orEmpty()
+
+                    displayTeamFollowUps(teamFollowUps)
+                }
+
+                ApiStatus.Status.ERROR -> {
+
+                    teamFollowUpAdapter.submitList(emptyList())
+
+                    Toast.makeText(
+                        requireContext(),
+                        resource.message
+                            ?: "Unable to load team follow-ups",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+    }
+
+    // ==========================================
+    // DISPLAY TEAM FOLLOW-UPS
+    // ==========================================
+
+    private fun displayTeamFollowUps(
+        teamFollowUps: List<TeamFollowUpItem>
     ) {
 
-        val shouldShowTeam =
-            showTeamFollowUps && !showSellingEnquiry
-
-        val shouldShowSelling =
-            showSellingEnquiry && !showTeamFollowUps
+        teamFollowUpAdapter.submitList(teamFollowUps)
 
         binding.layoutTeamFollowUps.visibility =
-            if (shouldShowTeam) View.VISIBLE else View.GONE
-
-        binding.cardSellingEnquiry.visibility =
-            if (shouldShowSelling) View.VISIBLE else View.GONE
+            if (teamFollowUps.isNotEmpty()) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
     }
 
-    // ==================================================
+    // ==========================================
+    // ROLE-BASED VISIBILITY
+    // ==========================================
+
+    private fun updateDashboardSections() {
+
+        when (getUserType()) {
+
+            LoginUsers.SALES_CONSULTANT -> {
+
+                binding.layoutTeamFollowUps.visibility = View.GONE
+
+                binding.cardSellingEnquiry.visibility = View.VISIBLE
+            }
+
+            LoginUsers.H_PROMISE_MANAGER -> {
+
+                binding.layoutTeamFollowUps.visibility = View.VISIBLE
+
+                binding.cardSellingEnquiry.visibility = View.GONE
+            }
+
+            else -> {
+
+                binding.layoutTeamFollowUps.visibility = View.GONE
+
+                binding.cardSellingEnquiry.visibility = View.GONE
+            }
+        }
+    }
+
+    // ==========================================
     // FRAGMENT DESTROY
-    // ==================================================
+    // ==========================================
 
     override fun onDestroyView() {
         super.onDestroyView()

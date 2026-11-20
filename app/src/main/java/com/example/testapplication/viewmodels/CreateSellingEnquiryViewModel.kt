@@ -8,10 +8,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.testapplication.datamodels.CreateSellingEnquiryRequest
 import com.example.testapplication.datamodels.CreateSellingEnquiryResponse
+import com.example.testapplication.datamodels.EnquiryDetailsResponse
+import com.example.testapplication.datamodels.UpdateSellingEnquiryRequest
 import com.example.testapplication.network.ApiProvider
 import com.example.testapplication.network.RepositoryApprik
 import com.example.testapplication.utils.ApiStatus
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class CreateSellingEnquiryViewModel(
@@ -69,6 +72,120 @@ class CreateSellingEnquiryViewModel(
             }
         }
     }
+
+
+    private val _enquiryDetailsResponse =
+        MutableLiveData<ApiStatus.Resource<EnquiryDetailsResponse>>()
+
+    val enquiryDetailsResponse: LiveData<ApiStatus.Resource<EnquiryDetailsResponse>>
+        get() = _enquiryDetailsResponse
+
+    fun getEnquiryDetails(
+        enquiryId: Int,
+        token: String
+    ) {
+
+        viewModelScope.launch {
+
+            _enquiryDetailsResponse.value =
+                ApiStatus.Resource.loading()
+
+            try {
+
+                repository.getEnquiryDetails(
+                    enquiryId,
+                    token
+                )
+                    .catch { exception ->
+
+                        if (exception is kotlin.coroutines.cancellation.CancellationException) {
+                            throw exception
+                        }
+
+                        _enquiryDetailsResponse.value =
+                            ApiStatus.Resource.error(
+                                exception.message
+                                    ?: "Unable to fetch enquiry details"
+                            )
+                    }
+                    .collect { response ->
+
+                        if (response.status) {
+
+                            _enquiryDetailsResponse.value =
+                                ApiStatus.Resource.success(response)
+
+                        } else {
+
+                            _enquiryDetailsResponse.value =
+                                ApiStatus.Resource.error(response.message)
+                        }
+                    }
+
+            } catch (exception: kotlin.coroutines.cancellation.CancellationException) {
+
+                throw exception
+
+            } catch (exception: Exception) {
+
+                _enquiryDetailsResponse.value =
+                    ApiStatus.Resource.error(
+                        exception.message
+                            ?: "Something went wrong"
+                    )
+            }
+        }
+    }
+
+    private val _updateEnquiryResponse =
+        MutableLiveData<ApiStatus.Resource<EnquiryDetailsResponse>>()
+
+    val updateEnquiryResponse: LiveData<ApiStatus.Resource<EnquiryDetailsResponse>>
+        get() = _updateEnquiryResponse
+
+    fun updateSellingEnquiry(
+        enquiryId: Int,
+        token: String,
+        request: UpdateSellingEnquiryRequest
+    ) {
+        viewModelScope.launch {
+            _updateEnquiryResponse.value = ApiStatus.Resource.loading()
+
+            try {
+                repository.updateSellingEnquiry(
+                    enquiryId,
+                    token,
+                    request
+                )
+                    .catch { exception ->
+                        if (exception is kotlin.coroutines.cancellation.CancellationException) throw exception
+
+                        _updateEnquiryResponse.value =
+                            ApiStatus.Resource.error(
+                                exception.message ?: "Unable to update enquiry"
+                            )
+                    }
+                    .collect { response ->
+                        if (response.status) {
+                            _updateEnquiryResponse.value =
+                                ApiStatus.Resource.success(response)
+                        } else {
+                            _updateEnquiryResponse.value =
+                                ApiStatus.Resource.error(response.message)
+                        }
+                    }
+
+            } catch (exception: kotlin.coroutines.cancellation.CancellationException) {
+                throw exception
+            } catch (exception: Exception) {
+                _updateEnquiryResponse.value =
+                    ApiStatus.Resource.error(
+                        exception.message ?: "Something went wrong"
+                    )
+            }
+        }
+    }
+
 }
 class CreateSellingEnquiryViewModelFactory(
     private val context: Context

@@ -6,11 +6,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.testapplication.activities.CreateSellingEnquiryActivity
 import com.example.testapplication.adapters.CustomSpinnerAdapter
 import com.example.testapplication.databinding.FragmentEnquiryDetailsBinding
+import com.example.testapplication.datamodels.Enquiry
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -225,14 +227,64 @@ class EnquiryDetailsFragment : Fragment() {
         }
     }
 
+    fun populateEnquiryDetails(enquiry: Enquiry) {
+        if (_binding == null) return
+
+        binding.apply {
+            etEnquiryNo.setText(enquiry.enquiryNo)
+            etEnquiryDate.setText(enquiry.dateOfEnquiry)
+            etRegistrationNo.setText(enquiry.regNo)
+
+            setSpinnerValue(spEnquirySource, enquiry.enquirySource)
+            setSpinnerValue(spEnquirySubSource, enquiry.enquirySubSource)
+            setSpinnerValue(spMaker, enquiry.maker)
+            setSpinnerValue(spModel, enquiry.model)
+            setSpinnerValue(spVariant, enquiry.variant)
+            setSpinnerValue(spFuelType, enquiry.fuelType)
+        }
+    }
+
+    fun getEnquiryDetails(): EnquiryDetails? {
+        if (_binding == null) return null
+
+        return validateAndGetData()
+    }
+
+    private fun setSpinnerValue(
+        spinner: Spinner,
+        value: String
+    ) {
+        if (value.isBlank()) return
+
+        val adapter = spinner.adapter ?: return
+
+        for (position in 0 until adapter.count) {
+            if (
+                adapter.getItem(position)?.toString()
+                    ?.equals(value, ignoreCase = true) == true
+            ) {
+                spinner.setSelection(position)
+                return
+            }
+        }
+    }
+    fun setButtonText(text: String) {
+        _binding?.let { binding ->
+            binding.btnCreate.tag = text
+            binding.btnCreate.text = text
+        }
+    }
+
     fun setCreateLoading(isLoading: Boolean) {
 
         _binding?.let { binding ->
 
             binding.btnCreate.isEnabled = !isLoading
 
-            binding.btnCreate.text =
-                if (isLoading) "Creating..." else "Create"
+            binding.btnCreate.text = when {
+                isLoading -> "Please wait..."
+                else -> binding.btnCreate.tag?.toString() ?: "Create"
+            }
         }
     }
 

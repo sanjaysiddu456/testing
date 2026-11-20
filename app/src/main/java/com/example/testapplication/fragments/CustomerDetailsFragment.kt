@@ -6,11 +6,13 @@ import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.testapplication.activities.CreateSellingEnquiryActivity
 import com.example.testapplication.adapters.CustomSpinnerAdapter
 import com.example.testapplication.databinding.FragmentCustomerDetailsBinding
+import com.example.testapplication.datamodels.Enquiry
 
 data class CustomerDetails(
     val mobile: String,
@@ -224,6 +226,51 @@ class CustomerDetailsFragment : Fragment() {
             Toast.LENGTH_SHORT
         ).show()
     }
+
+
+    fun populateCustomerDetails(enquiry: Enquiry) {
+        if (_binding == null) return
+
+        binding.apply {
+            etMobile.setText(enquiry.mobileNumber)
+            etCustomerName.setText(enquiry.customerName)
+            etEmail.setText(enquiry.email)
+            etAddress.setText(enquiry.address)
+            etPinCode.setText(enquiry.pinCode)
+            etWhatsapp.setText(enquiry.whatsappNo)
+
+            setSpinnerValue(spCustomerType, enquiry.customerType)
+            setSpinnerValue(spGender, enquiry.gender)
+            setSpinnerValue(spState, enquiry.state)
+            setSpinnerValue(spDistrict, enquiry.district)
+            setSpinnerValue(spCity, enquiry.city)
+        }
+    }
+    fun getCustomerDetails(): CustomerDetails? {
+        if (_binding == null) return null
+
+        return validateAndGetData()
+    }
+    private fun setSpinnerValue(
+        spinner: Spinner,
+        value: String
+    ) {
+        if (value.isBlank()) return
+
+        val adapter = spinner.adapter ?: return
+
+        for (position in 0 until adapter.count) {
+            if (
+                adapter.getItem(position)?.toString()
+                    ?.equals(value, ignoreCase = true) == true
+            ) {
+                spinner.setSelection(position)
+                return
+            }
+        }
+    }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()

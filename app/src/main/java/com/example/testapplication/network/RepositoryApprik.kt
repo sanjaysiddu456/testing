@@ -12,6 +12,7 @@ import com.example.testapplication.datamodels.NewFollowUpRequest
 import com.example.testapplication.datamodels.ReportsResponse
 import com.example.testapplication.datamodels.StockResponse
 import com.example.testapplication.datamodels.TeamFollowUpResponse
+import com.example.testapplication.datamodels.UpdateSellingEnquiryRequest
 import com.example.testapplication.datamodels.responseGetEnquiries
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -320,6 +321,30 @@ class RepositoryApprik(
         )
 
         emit(response)
+
+    }.flowOn(Dispatchers.IO)
+
+    suspend fun updateSellingEnquiry(
+        enquiryId: Int,
+        token: String,
+        request: UpdateSellingEnquiryRequest
+    ): Flow<EnquiryDetailsResponse> = flow {
+
+        val response = apiService.updateSellingEnquiry(
+            enquiryId,
+            token,
+            request
+        )
+
+        if (response.isSuccessful) {
+            response.body()?.let {
+                emit(it)
+            } ?: throw Exception("Empty response body")
+        } else {
+            throw Exception(
+                response.errorBody()?.string() ?: "Unable to update enquiry"
+            )
+        }
 
     }.flowOn(Dispatchers.IO)
 

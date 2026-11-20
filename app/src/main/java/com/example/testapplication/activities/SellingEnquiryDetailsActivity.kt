@@ -1,15 +1,18 @@
 
 package com.example.testapplication.enquiryFeature
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.testapplication.activities.CreateSellingEnquiryActivity
 import com.example.testapplication.activities.NewFollowUpActivity
 import com.example.testapplication.adapter.FollowUpAdapter
 import com.example.testapplication.datamodels.Enquiry
@@ -49,6 +52,8 @@ class SellingEnquiryDetailsActivity : AppCompatActivity() {
         const val EXTRA_ENQUIRY_ID = "extra_enquiry_id"
         const val EXTRA_TOKEN = "extra_token"
     }
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,6 +101,20 @@ class SellingEnquiryDetailsActivity : AppCompatActivity() {
             token = token
         )
     }
+
+    private val editEnquiryLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+
+            if (result.resultCode == Activity.RESULT_OK) {
+
+                enquiryViewModel.getEnquiryDetails(
+                    enquiryId = enquiryId,
+                    ""
+                )
+            }
+        }
 
     // ==========================================
     // USER ROLE
@@ -386,6 +405,34 @@ class SellingEnquiryDetailsActivity : AppCompatActivity() {
 
     private fun setupClickListeners() {
 
+
+
+
+        binding.btnEdit.setOnClickListener {
+
+            val intent = Intent(
+                this,
+                CreateSellingEnquiryActivity::class.java
+            ).apply {
+                putExtra(
+                    CreateSellingEnquiryActivity.EXTRA_MODE,
+                    CreateSellingEnquiryActivity.MODE_EDIT
+                )
+
+                putExtra(
+                    CreateSellingEnquiryActivity.EXTRA_ENQUIRY_ID,
+                    enquiryId
+                )
+
+                putExtra(
+                    CreateSellingEnquiryActivity.EXTRA_TOKEN,
+                    authToken
+                )
+            }
+
+            editEnquiryLauncher.launch(intent)
+        }
+
         binding.btnCallCustomer.setOnClickListener {
 
             val mobileNumber = enquiry?.mobileNumber.orEmpty()
@@ -408,6 +455,8 @@ class SellingEnquiryDetailsActivity : AppCompatActivity() {
                 ).show()
             }
         }
+
+
 
         binding.btnCloseEnquiry.setOnClickListener {
 

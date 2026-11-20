@@ -11,12 +11,15 @@ import com.example.testapplication.datamodels.NewFollowUpRequest
 import com.example.testapplication.datamodels.ReportsResponse
 import com.example.testapplication.datamodels.StockResponse
 import com.example.testapplication.datamodels.TeamFollowUpResponse
+import com.example.testapplication.datamodels.UpdateSellingEnquiryRequest
 import com.example.testapplication.datamodels.responseGetEnquiries
+import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface ApiService {
@@ -64,5 +67,12 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Body request: CreateSellingEnquiryRequest
     ): CreateSellingEnquiryResponse
+
+    @PUT("your-update-enquiry-endpoint/{id}")
+    suspend fun updateSellingEnquiry(
+        @Path("id") enquiryId: Int,
+        @Header("Authorization") token: String,
+        @Body request: UpdateSellingEnquiryRequest
+    ): Response<EnquiryDetailsResponse>
 
 }

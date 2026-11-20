@@ -67,6 +67,53 @@ class EnquiryDetailsFragment : Fragment() {
         }
     }
 
+//    private fun setMakerList(
+//        masterData: HPromiseSalesMasterData
+//    ) {
+//        val makerNames = mutableListOf<String>()
+//
+//        makerNames.add("Select Maker")
+//
+//        val makerList = masterData.getMakerList()
+//
+//        if (!makerList.isNullOrEmpty()) {
+//            makerList.forEach { maker ->
+//                makerNames.add(maker.getCmCodeName())
+//            }
+//        }
+//
+//        val adapter = CustomSpinnerAdapter(
+//            requireContext(),
+//            makerNames
+//        )
+//
+//        binding.spMaker.adapter = adapter
+//        binding.spMaker.setSelection(0)
+//
+//        binding.spMaker.onItemSelectedListener =
+//            object : android.widget.AdapterView.OnItemSelectedListener {
+//
+//                override fun onItemSelected(
+//                    parent: android.widget.AdapterView<*>?,
+//                    view: View?,
+//                    position: Int,
+//                    id: Long
+//                ) {
+//                    if (position > 0) {
+//                        val selectedMaker = makerList[position - 1]
+//
+//                        val makerId = selectedMaker.getCmCode()
+//
+//                        // Later we will use makerId to load models.
+//                    }
+//                }
+//
+//                override fun onNothingSelected(
+//                    parent: android.widget.AdapterView<*>?
+//                ) {}
+//            }
+//    }
+
     private fun setupSpinners() {
 
         setSpinner(

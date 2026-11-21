@@ -186,6 +186,42 @@ class CreateSellingEnquiryViewModel(
         }
     }
 
+    private val _pinCodeResponse =
+        MutableLiveData<ApiStatus.Resource<SalesCustomerPinCodeSearch>>()
+
+    val pinCodeResponse: LiveData<ApiStatus.Resource<SalesCustomerPinCodeSearch>>
+        get() = _pinCodeResponse
+
+    fun searchPinCode(
+        token: String,
+        pinCode: String
+    ) {
+        viewModelScope.launch {
+
+            _pinCodeResponse.value =
+                ApiStatus.Resource.loading()
+
+            try {
+                val response = repository.searchPinCode(
+                    token,
+                    pinCode
+                )
+
+                _pinCodeResponse.value =
+                    ApiStatus.Resource.success(response)
+
+            } catch (e: Exception) {
+
+                _pinCodeResponse.value =
+                    ApiStatus.Resource.error(
+                        e.message ?: "Pincode lookup failed"
+                    )
+            }
+        }
+    }
+
+
+
 }
 class CreateSellingEnquiryViewModelFactory(
     private val context: Context

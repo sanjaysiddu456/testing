@@ -31,6 +31,8 @@ data class CustomerDetails(
 class CustomerDetailsFragment : Fragment() {
 
     private var _binding: FragmentCustomerDetailsBinding? = null
+
+    private var lastSearchedPinCode = ""
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -52,6 +54,8 @@ class CustomerDetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupSpinners()
+        setupPinCodeSearch()
+        observePinCodeResponse()
 
         binding.btnContinue.setOnClickListener {
 
@@ -63,7 +67,115 @@ class CustomerDetailsFragment : Fragment() {
             }
         }
     }
+    private fun setupPinCodeSearch() {
 
+        binding.etPinCode.addTextChangedListener(
+            object : TextWatcher {
+
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) = Unit
+
+                override fun onTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    before: Int,
+                    count: Int
+                ) {
+
+                    val pinCode = s.toString().trim()
+
+                    if (pinCode.length < 6) {
+                        lastSearchedPinCode = ""
+
+                        binding.etState.setText("")
+                        binding.etDistrict.setText("")
+                        binding.etCity.setText("")
+                        return
+                    }
+
+                    if (
+                        pinCode.length == 6 &&
+                        pinCode != lastSearchedPinCode
+                    ) {
+                        lastSearchedPinCode = pinCode
+
+                        pinCodeViewModel.searchPinCode(
+                            Constants.LOGIN_TOKEN,
+                            pinCode
+                        )
+                    }
+                }
+
+                override fun afterTextChanged(s: Editable?) = Unit
+            }
+        )
+    }
+
+    private fun observePinCodeResponse() {
+
+        pinCodeViewModel.pinCodeResponse.observe(
+            viewLifecycleOwner
+        ) { resource ->
+
+            val response = resource.data ?: return@observe
+
+            val item = response.getData()
+                ?.firstOrNull()
+                ?: return@observe
+
+            val json = Gson().toJsonTree(item).asJsonObject
+
+            fun getValue(vararg keys: String): String {
+                for (key in keys) {
+                    if (json.has(key) && !json.get(key).isJsonNull) {
+                        return json.get(key).asString
+                    }
+                }
+                return ""
+            }
+
+            val state = getValue(
+                "sStcdName",
+                "SStcdName",
+                "stateName",
+                "state"
+            )
+
+            val district = getValue(
+                "sDstrtName",
+                "SDstrtName",
+                "districtName",
+                "district"
+            )
+
+            val city = getValue(
+                "sCityName",
+                "SCityName",
+                "cityName",
+                "city"
+            )
+
+            val postOffice = getValue(
+                "sPostOfficeName",
+                "SPostOfficeName",
+                "postOfficeName",
+                "postOffice"
+            )
+
+            binding.etState.setText(state)
+            binding.etDistrict.setText(district)
+            binding.etCity.setText(city)
+
+            // Do not overwrite the customer's manually entered address.
+            if (binding.etAddress.text.isNullOrBlank()) {
+                binding.etAddress.setText(postOffice)
+            }
+        }
+    }
     private fun setupSpinners() {
 
         setSpinner(
@@ -171,18 +283,22 @@ class CustomerDetailsFragment : Fragment() {
             return null
         }
 
-        if (binding.spState.selectedItemPosition == 0) {
-            showMessage("Select state")
+        val state = binding.etState.text.toString().trim()
+        val district = binding.etDistrict.text.toString().trim()
+        val city = binding.etCity.text.toString().trim()
+
+        if (state.isEmpty()) {
+            binding.etState.error = "Enter state"
             return null
         }
 
-        if (binding.spDistrict.selectedItemPosition == 0) {
-            showMessage("Select district")
+        if (district.isEmpty()) {
+            binding.etDistrict.error = "Enter district"
             return null
         }
 
-        if (binding.spCity.selectedItemPosition == 0) {
-            showMessage("Select city")
+        if (city.isEmpty()) {
+            binding.etCity.error = "Enter city"
             return null
         }
 
@@ -210,9 +326,9 @@ class CustomerDetailsFragment : Fragment() {
             customerType = binding.spCustomerType.selectedItem.toString(),
             gender = binding.spGender.selectedItem.toString(),
             email = email,
-            state = binding.spState.selectedItem.toString(),
-            district = binding.spDistrict.selectedItem.toString(),
-            city = binding.spCity.selectedItem.toString(),
+            state = state,
+            district = district,
+            city = city,
             address = address,
             pinCode = pinCode,
             whatsappNo = whatsapp
@@ -241,9 +357,9 @@ class CustomerDetailsFragment : Fragment() {
 
             setSpinnerValue(spCustomerType, enquiry.customerType)
             setSpinnerValue(spGender, enquiry.gender)
-            setSpinnerValue(spState, enquiry.state)
-            setSpinnerValue(spDistrict, enquiry.district)
-            setSpinnerValue(spCity, enquiry.city)
+            etState.setText(enquiry.state)
+            etDistrict.setText(enquiry.district)
+            etCity.setText(enquiry.city)
         }
     }
     fun getCustomerDetails(): CustomerDetails? {

@@ -386,7 +386,6 @@ class CreateSellingEnquiryActivity : AppCompatActivity() {
             address = customer.address,
             pinCode = customer.pinCode,
             whatsappNo = customer.whatsappNo,
-
             enquiryNo = enquiry.enquiryNo,
             enquiryDate = enquiry.enquiryDate,
             enquirySource = enquiry.enquirySource,

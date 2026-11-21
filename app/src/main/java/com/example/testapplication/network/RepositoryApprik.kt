@@ -348,4 +348,42 @@ class RepositoryApprik(
 
     }.flowOn(Dispatchers.IO)
 
+    suspend fun searchPinCode(
+        token: String,
+        pinCode: String
+    ): SalesCustomerPinCodeSearch {
+
+        val request = SalesCustomerPinCodeSearchBody().apply {
+            setRecordCountPerPage(50)
+            setPageIndex(1)
+            setFirstIndex(0)
+            setLastIndex(50)
+
+            setSStcdName("")
+            setSDstrtName("")
+            setSCityName("")
+            setSPostOfficeName("")
+            setSPinCode(pinCode)
+        }
+
+        val response = apiService.searchPinCode(
+            token = "Bearer $token",
+            contentType = "application/json",
+            request = request
+        )
+
+        if (response.isSuccessful) {
+            val body = response.body()
+
+            if (body != null && !body.getData().isNullOrEmpty()) {
+                return body
+            }
+        }
+
+        throw Exception(
+            response.errorBody()?.string()
+                ?: "Invalid pincode or no address found"
+        )
+    }
+
 }

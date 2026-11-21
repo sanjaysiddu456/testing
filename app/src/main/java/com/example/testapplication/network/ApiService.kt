@@ -75,4 +75,11 @@ interface ApiService {
         @Body request: UpdateSellingEnquiryRequest
     ): Response<EnquiryDetailsResponse>
 
+    @POST("mobile/sales/address/selectPinCodeList.do")
+    suspend fun searchPinCode(
+        @Header("Authorization") token: String,
+        @Header("Content-Type") contentType: String,
+        @Body request: SalesCustomerPinCodeSearchBody
+    ): Response<SalesCustomerPinCodeSearch>
+
 }
